@@ -1,0 +1,27 @@
+<h1>Members</h1>
+<p>
+<a style = 'margin-top:50px' href="/pets">Pets</a>
+</p>
+<table border="1">
+
+<tr style="background-color: rgb(76, 238, 76);">
+
+  <td><b>Name</b></td>
+  <!-- <td><b>Lastname</b></td> -->
+  <td><b>Details</b></td>
+
+</tr>
+{% for x in mymembers %}
+  <tr>
+
+    <td>{{ x.fullname }}</td>
+    
+    <td><a href="/member/{{ x.id }} ">Details</a></td>
+
+  </tr>
+{% endfor %}
+</table>
+
+<p>
+<a href="add/">Add member</a>
+</p>

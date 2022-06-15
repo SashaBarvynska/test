@@ -1,0 +1,53 @@
+<h1>Details</h1>
+
+<p>
+    <a style = 'margin-top:50px' href="/">Return to main</a>
+</p>
+
+<table border="1">
+
+<tr style="background-color: rgb(76, 238, 76);">
+
+  <td><b>Id</b></td>
+  <td><b>Firstname</b></td>
+  <td><b>Lastname</b></td>
+  <td><b>Age</b></td>
+  <td><b>Delete</b></td>
+  <td><b>Update</b></td>
+  <td><b>Adopt pet</b></td>
+
+</tr>
+
+  <tr>
+    <td>{{ member.id }}</td>
+    <td>{{ member.firstname }}</td>
+    <td>{{ member.lastname }}</td>
+    <td>{{ member.age }}</td>
+    <td><a href="delete/{{ member.id }}">delete</a></td>
+    <td><a href="update/{{ member.id }}">update</a></td>
+    <td><a href="/member/{{ member.id }}/adopt">adopt</a></td>
+  </tr>
+
+</table>
+
+<h1>My pets</h1>
+<table border="4">
+<tr style="background-color: rgb(127, 179, 247);">
+
+    <td><b>Name</b></td>
+    <td><b>Type</b></td>
+    <td><b>Gender</b></td>
+    <td><b>Remove</b></td>
+</tr>
+
+    {% for pet in mypets %}
+<tr>
+    <td>{{ pet.name }}</td>
+    <td>{{ pet.type }}</td>
+    <td>{{ pet.gender }}</td>
+    <td><a href="/pet/{{ pet.id }}/remove">remove pet</a></td>
+</tr>
+{% endfor %}
+
+
+</table>

@@ -1,0 +1,53 @@
+<h1>PETS</h1>
+
+<p>
+  {% if isAdopt == True %}
+  <a style = 'margin-top:50px' href="/member/{{ member_id }}">Return to Details</a>
+  {% endif %}
+  {% if isAdopt == False %}
+  <a style = 'margin-top:50px' href="/">Return to main</a>
+  {% endif %}
+
+</p>
+
+<table border="3">
+<tr style="background-color: rgb(76, 238, 76);">
+
+  <td><b>Name</b></td>
+  <td><b>Type</b></td>
+  <td><b>Gender</b></td>
+  
+  
+
+  {% if isAdopt == True %}
+    <td><b>Adopt</b></td>
+  {% endif %}
+  {% if isAdopt == False %}
+    <td><b>Delete</b></td>
+    <td><b>Update</b></td>
+  {% endif %}
+</tr>
+{% for pet in mypets %}
+  <tr>
+  <td>{{ pet.name }}</td>
+  <td>{{ pet.type }}</td>
+  <td>{{ pet.gender }}</td>
+
+  {% if isAdopt == True %}
+    <td><a href="/member/{{ member_id }}/pet/{{ pet.id }}/add">add pet</a></td>
+  {% endif %}
+
+  {% if isAdopt == False %}
+    <td><a href="deletepet/{{ pet.id }}">delete pet</a></td>
+    <td><a href="updatepet/{{ pet.id }}">update pet</a></td>
+  {% endif %}
+  
+  </tr>
+{% endfor %}
+
+</table>
+{% if isAdopt == False %}
+<p>
+  <a href="addpets">Add pets</a>
+</p>
+{% endif %}
