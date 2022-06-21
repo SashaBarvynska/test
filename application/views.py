@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 from django.urls import reverse
 from .models import Members, Pets
@@ -13,9 +13,9 @@ def index(request):
   template = loader.get_template('members/index.html')
 
   context = {
-    'mymembers': mymembers,
+    'mymembers': list(mymembers),
   }
-  return HttpResponse(template.render(context, request))
+  return JsonResponse(context)
   
 def add(request):
   template = loader.get_template('members/add.html')

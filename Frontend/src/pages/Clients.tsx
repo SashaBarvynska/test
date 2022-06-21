@@ -1,21 +1,41 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { List, ListItem } from '../components'
+import Axios, { AxiosPromise } from 'axios'
+
+interface Res {
+  mymembers: MembersInterface[]
+}
+
+interface MembersInterface {
+  id: number,
+  firstname: string
+  lastname: string
+  age: number
+  fullname: string
+}
 
 const ClientsPage = () => {
-  const clients = [
-    { first_name: 'John', last_name: 'Doe' },
-    { first_name: 'Jane', last_name: 'Smith' },
-    { first_name: 'Joe', last_name: 'Schmoe' }
-  ]
+  const [members, setMembers] = useState<MembersInterface[]>([])
+
+  const loadMyMembers = async () => {
+    const { data } = await (Axios.get('http://127.0.0.1:8000/') as  AxiosPromise<Res>)
+    setMembers(data.mymembers)
+  }
+
+  useEffect(() => {
+    loadMyMembers()
+  }, [])
+
+  console.log('mymembers: ', members)
 
   return (
     <Fragment>
       <List>
-        {clients.map(({ first_name, last_name }, index) => (
+        {members.length ? members?.map(({ firstname, lastname, age }, index) => (
           <ListItem key={index}>
-            {`${first_name} ${last_name}`}
+            {`${firstname} ${lastname} ${age}`}
           </ListItem>
-        ))}
+        )) : []}
       </List>
     </Fragment>
   )
