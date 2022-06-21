@@ -2,5 +2,5 @@
 node_modules
 
 #Back
-__pycache__/
+__pycache__
 *.py[cod]
