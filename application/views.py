@@ -1,8 +1,6 @@
-from turtle import reset
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest, QueryDict
-from django.template import loader
-from django.urls import reverse
+from django.http import JsonResponse, HttpRequest, QueryDict
 from .models import Members, Pets
+from .validators import CustomValidation
 
 # pets
 def adopt_pet(request, pet_id):#PUT 
@@ -61,6 +59,24 @@ def handle_member(request: HttpRequest, id):
     first = put.get('first')
     last = put.get('last')
     age = put.get('age')
+    validated = CustomValidation({
+      'first' : {
+        'value': first, 
+        'validators': {'type': 'str', 'maxlength': 10 , 'minlength': 3}
+      },
+      'last' : {
+        'value': last, 
+        'validators': {'type': 'str', 'maxlength': 8 , 'minlength': 3}
+      },
+      'age' : {
+        'value': age, 
+        'validators': {'type': 'int', 'max_value': 99 , 'min_value': 1}
+      }
+    })
+
+    if validated.is_valid == False:
+      return validated.get_errors()
+
     member = Members.objects.get(id=id)
     member.firstname = first
     member.lastname = last
@@ -102,12 +118,29 @@ def handle_all_members(request: HttpRequest):
     first = request.POST['first']
     last = request.POST['last']
     age = request.POST['age']
+    validated = CustomValidation({
+      'first' : {
+        'value': first, 
+        'validators': {'type': 'str', 'maxlength': 10 , 'minlength': 3}
+      },
+      'last' : {
+        'value': last, 
+        'validators': {'type': 'str', 'maxlength': 8 , 'minlength': 3}
+      },
+      'age' : {
+        'value': age, 
+        'validators': {'type': 'int', 'max_value': 99 , 'min_value': 1}
+      }
+    })
+
+    if validated.is_valid == False:
+      return validated.get_errors()
+
     member = Members(firstname=first, lastname=last, age=age)
     member.save()
     return JsonResponse({
       'updated_member': {'id': member.pk, 'firstname': first, 'lastname': last, 'age': age},
     })
-
 
 
 def handle_pet(request: HttpRequest, id):
@@ -125,20 +158,39 @@ def handle_pet(request: HttpRequest, id):
     })
 
   if request.method == 'PUT':
+
     put = QueryDict(request.body)
-    name = put.get('name')
-    type = put.get('type')
+    name: str = put.get('name')
+    typefield = put.get('typefield')
     gender = put.get('gender')
+    validated = CustomValidation({
+      'name' : {
+        'value': name, 
+        'validators': {'type': 'str', 'maxlength': 10 , 'minlength': 3}
+      },
+      'typefield' : {
+        'value': typefield, 
+        'validators': {'type': 'str', 'maxlength': 8 , 'minlength': 3}
+      },
+      'gender' : {
+        'value': gender, 
+        'validators': {'type': 'str', 'maxlength': 10 , 'minlength': 3}
+      }
+    })
+
+    if validated.is_valid == False:
+      return validated.get_errors()
+  
     pet = Pets.objects.get(id=id)
     pet.name = name
-    pet.type = type
+    pet.typefield = typefield
     pet.gender = gender
     pet.save()
     return JsonResponse({
     'updated_pet': {
       'id': pet.pk,
       'name': pet.name, 
-      'type': pet.type, 
+      'type': pet.typefield, 
       'gender':pet.gender,
       'member_id': pet.member_id,
       },
@@ -164,6 +216,23 @@ def handle_all_pets(request: HttpRequest):
     name = request.POST['name']
     type = request.POST['type']
     gender = request.POST['gender']
+    validated = CustomValidation({
+      'name' : {
+        'value': name, 
+        'validators': {'type': 'str', 'maxlength': 10 , 'minlength': 3}
+      },
+      'typefield' : {
+        'value': type, 
+        'validators': {'type': 'str', 'maxlength': 8 , 'minlength': 3}
+      },
+      'gender' : {
+        'value': gender, 
+        'validators': {'type': 'str', 'maxlength': 10 , 'minlength': 3}
+      }
+    })
+
+    if validated.is_valid == False:
+      return validated.get_errors()
     pet = Pets(name=name, type=type, gender=gender)
     pet.save()
     return JsonResponse({
