@@ -5,11 +5,8 @@ import styled from 'styled-components'
 const Navbar: FC = () => (
   <Container>
     <TabContainer>
-      <Tab to="/">Home</Tab>
-      <Tab to="login">Login</Tab>
-      <Tab to="clients">Clients</Tab>
-      <Tab to="profile">Profile</Tab>
-      <Tab to="help">Help</Tab>
+      <Tab to="members">Members</Tab>
+      <Tab to="pets">Pets</Tab>
     </TabContainer>
   </Container>
 )
@@ -22,7 +19,7 @@ const Container = styled.div`
 const TabContainer = styled.div`
   display: flex;
   align-items: center;
-  width: 40%;
+  width: 17%;
   height: 100%;
   margin-left: 15%;
 `
@@ -39,7 +36,7 @@ const Tab = styled(Link)`
   justify-content: center;
 
   :hover {
-    color: blue;
+    color: #ed8cb5;
   }
 `
 

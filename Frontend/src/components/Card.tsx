@@ -16,7 +16,6 @@ const Container = styled.div`
   padding: 2.5em;
   font-family: cursive;
   border-radius: 0.3em;
-  box-shadow: 0.1em 0.1em 0.5em 0.01em;
 `
 
 export { Card }

@@ -20,13 +20,12 @@ const ListItem: FC<ListItemProps> = ({ className, children }) => (
 )
 
 const StyledList = styled.ul`
-  background: white;
+  border: 1px solid var(--primary);
   list-style-type: none;
   max-width: 30em;
   padding: 2.5em;
   font-family: cursive;
   border-radius: 0.3em;
-  box-shadow: 0.1em 0.1em 0.5em 0.01em;
 `
 
 const StyledListItem = styled.li`

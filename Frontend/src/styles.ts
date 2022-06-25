@@ -2,8 +2,8 @@ import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyles = createGlobalStyle`
     html {
-        --primary: #EBB2D2;
-        --secondary: #EBCCDD;
+        --primary: #6E2346;
+        --secondary: #FDFDFD;
     }
 
     body {
