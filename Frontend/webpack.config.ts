@@ -38,6 +38,7 @@ const config: Configuration = {
     static: path.join(__dirname, "build"),
     compress: true,
     port: 4000,
+    historyApiFallback: true,
   },
 };
 

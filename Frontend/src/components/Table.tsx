@@ -17,18 +17,22 @@ const Table = <T extends Record<string, any>>({
 }: TableProps<T>) => {
   return (
     <StyledTable>
-      <StyledHeaderRow>
-        {columns.map((column) => (
-          <StyledHeader>{column.header}</StyledHeader>
-        ))}
-      </StyledHeaderRow>
-      {records.map((record) => (
-        <StyledDataRow>
-          {columns.map((column) => (
-            <StyledDataCell>{record[column.field]}</StyledDataCell>
+      <tbody>
+        <StyledHeaderRow>
+          {columns.map((column, index) => (
+            <StyledHeader key={index}>{column.header}</StyledHeader>
           ))}
-        </StyledDataRow>
-      ))}
+        </StyledHeaderRow>
+        {records.map((record, index) => (
+          <StyledDataRow key={index}>
+            {columns.map((column, index) => (
+              <StyledDataCell key={index}>
+                {record[column.field]}
+              </StyledDataCell>
+            ))}
+          </StyledDataRow>
+        ))}
+      </tbody>
     </StyledTable>
   )
 }
@@ -36,7 +40,6 @@ const Table = <T extends Record<string, any>>({
 const StyledTable = styled.table`
   width: 100%;
   border-spacing: 0;
-
   border-bottom: 2px solid var(--primary);
 `
 

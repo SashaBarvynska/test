@@ -1,7 +1,10 @@
 export interface Member {
     id: number
-    firstname: string
-    lastname: string
+    first_name: string
+    last_name: string
     age: number
-    fullname?: string
+}
+
+export interface CreateMember extends Omit<Member, 'id' | 'age'> {
+    age: string
 }
