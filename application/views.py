@@ -17,6 +17,7 @@ def adopt_pet(request, pet_id):  # PUT
                 "type": pet.type,
                 "gender": pet.gender,
                 "member_id": pet.member_id,
+                "country": pet.country,
             },
         }
     )
@@ -34,6 +35,7 @@ def remove_pet(request, pet_id):  # PUT
                 "type": pet.type,
                 "gender": pet.gender,
                 "member_id": pet.member_id,
+                "country": pet.country,
             },
         }
     )
@@ -52,8 +54,8 @@ def handle_member(request: HttpRequest, id):
             {
                 "member": {
                     "id": member.id,
-                    "firstname": member.firstname,
-                    "lastname": member.lastname,
+                    "first_name": member.first_name,
+                    "last_name": member.last_name,
                     "age": member.age,
                 },
                 "mypets": list(mypets),
@@ -62,17 +64,17 @@ def handle_member(request: HttpRequest, id):
 
     if request.method == "PUT":
         put = QueryDict(request.body)
-        first = put.get("first")
-        last = put.get("last")
+        first_name = put.get("first_name")
+        last_name = put.get("last_name")
         age = put.get("age")
         validated = CustomValidation(
             {
-                "first": {
-                    "value": first,
+                "first_name": {
+                    "value": first_name,
                     "validators": {"type": "str", "maxlength": 10, "minlength": 3},
                 },
-                "last": {
-                    "value": last,
+                "last_name": {
+                    "value": last_name,
                     "validators": {"type": "str", "maxlength": 8, "minlength": 3},
                 },
                 "age": {
@@ -86,16 +88,16 @@ def handle_member(request: HttpRequest, id):
             return validated.get_errors()
 
         member = Members.objects.get(id=id)
-        member.firstname = first
-        member.lastname = last
+        member.first_name = first_name
+        member.last_name = last_name
         member.age = age
         member.save()
         return JsonResponse(
             {
                 "updated_member": {
                     "id": member.pk,
-                    "firstname": first,
-                    "lastname": last,
+                    "first_name": first_name,
+                    "last_name": last_name,
                     "age": age,
                 },
             }
@@ -108,8 +110,8 @@ def handle_member(request: HttpRequest, id):
             {
                 "deleted_member": {
                     "id": member.pk,
-                    "firstname": first,
-                    "lastname": last,
+                    "first_name": first_,
+                    "last_name": last_,
                     "age": age,
                 },
             }
@@ -121,26 +123,26 @@ def handle_all_members(request: HttpRequest):
         mymembers = Members.objects.all().values()
 
         for mymember in mymembers:
-            mymember["fullname"] = mymember["firstname"] + " " + mymember["lastname"]
+            mymember["fullname"] = mymember["first_name"] + " " + mymember["last_name"]
 
         return JsonResponse(
             {
-                "mymembers": list(mymembers),
+                "members": list(mymembers),
             }
         )
 
     if request.method == "POST":
-        first = request.POST["first"]
-        last = request.POST["last"]
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
         age = request.POST["age"]
         validated = CustomValidation(
             {
-                "first": {
-                    "value": first,
+                "first_name": {
+                    "value": first_name,
                     "validators": {"type": "str", "maxlength": 10, "minlength": 3},
                 },
-                "last": {
-                    "value": last,
+                "last_name": {
+                    "value": last_name,
                     "validators": {"type": "str", "maxlength": 8, "minlength": 3},
                 },
                 "age": {
@@ -153,15 +155,15 @@ def handle_all_members(request: HttpRequest):
         if validated.is_valid == False:
             return validated.get_errors()
 
-        member = Members(firstname=first, lastname=last, age=age)
+        member = Members(first_name=first_name, last_name=last_name, age=age)
         member.save()
         return JsonResponse(
             {
-                "updated_member": {
+                "createssd_member": {
                     "id": member.pk,
-                    "firstname": first,
-                    "lastname": last,
-                    "age": age,
+                    "first_name": member.first_name,
+                    "last_name": member.last_name,
+                    "age": member.age,
                 },
             }
         )
@@ -179,6 +181,7 @@ def handle_pet(request: HttpRequest, id):
                     "type": pet.type,
                     "gender": pet.gender,
                     "member_id": pet.member_id,
+                    "country": pet.country,
                 },
             }
         )
@@ -187,16 +190,17 @@ def handle_pet(request: HttpRequest, id):
 
         put = QueryDict(request.body)
         name: str = put.get("name")
-        typefield = put.get("typefield")
+        type_field = put.get("type_field")
         gender = put.get("gender")
+        country = put.get("country")
         validated = CustomValidation(
             {
                 "name": {
                     "value": name,
                     "validators": {"type": "str", "maxlength": 10, "minlength": 3},
                 },
-                "typefield": {
-                    "value": typefield,
+                "type_field": {
+                    "value": type_field,
                     "validators": {"type": "str", "maxlength": 8, "minlength": 3},
                 },
                 "gender": {
@@ -211,17 +215,19 @@ def handle_pet(request: HttpRequest, id):
 
         pet = Pets.objects.get(id=id)
         pet.name = name
-        pet.typefield = typefield
+        pet.type = type_field
         pet.gender = gender
+        pet.country = country
         pet.save()
         return JsonResponse(
             {
-                "updated_pet": {
+                "created_pet": {
                     "id": pet.pk,
                     "name": pet.name,
-                    "type": pet.typefield,
+                    "type": pet.type,
                     "gender": pet.gender,
                     "member_id": pet.member_id,
+                    "country": pet.country,
                 },
             }
         )
@@ -237,6 +243,7 @@ def handle_pet(request: HttpRequest, id):
                     "type": pet.type,
                     "gender": pet.gender,
                     "member_id": pet.member_id,
+                    "country": pet.country,
                 },
             }
         )
@@ -248,6 +255,7 @@ def handle_all_pets(request: HttpRequest):
         name = request.POST["name"]
         type = request.POST["type"]
         gender = request.POST["gender"]
+        country = request.POST["country"]
         validated = CustomValidation(
             {
                 "name": {
@@ -267,15 +275,16 @@ def handle_all_pets(request: HttpRequest):
 
         if validated.is_valid == False:
             return validated.get_errors()
-        pet = Pets(name=name, type=type, gender=gender)
+        pet = Pets(name=name, type=type, gender=gender, country=country)
         pet.save()
         return JsonResponse(
             {
-                "updated_pet": {
+                "pet": {
                     "id": pet.pk,
                     "name": pet.name,
                     "type": pet.type,
                     "gender": pet.gender,
+                    "country": pet.country,
                 },
                 "member_id": pet.member_id,
             }
@@ -285,6 +294,6 @@ def handle_all_pets(request: HttpRequest):
         mypets = Pets.objects.all().values()
         return JsonResponse(
             {
-                "mypets": list(mypets),
+                "pets": list(mypets),
             }
         )
