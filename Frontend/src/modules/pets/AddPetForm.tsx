@@ -3,16 +3,13 @@ import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
 import { createPet } from '../../api/pets'
 import { FormModal, FormInput } from '../../components'
+import { ValidationError } from '../../types/common'
 import { CreatePet, Pet } from '../../types/pet'
 
 interface AddPetFormProps {
   onClose: VoidFunction
   addPetToList: (pet: Pet) => void
 }
-
-type ValidationError = AxiosError<{
-  error: { fields: Record<string, string> }
-}>
 
 const AddPetForm: FC<AddPetFormProps> = ({
   onClose,
@@ -32,7 +29,7 @@ const AddPetForm: FC<AddPetFormProps> = ({
 
   const { mutate } = useMutation(() => createPet(newPet), {
     onSuccess: ({ data }) => {
-      addPetToList(data.updated_pet)
+      addPetToList(data.created_pet)
       onClose()
     },
     onError: (e: ValidationError) => {

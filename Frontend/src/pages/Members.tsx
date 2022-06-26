@@ -11,11 +11,11 @@ const Members = () => {
 
   const { data: members = [] } = useQuery('members', async () => {
     const { data } = await getMembers()
-    return data.mymembers
+    return data.members
   })
 
   const columns = [
-    { header: 'First Name', field: 'firs_tname' },
+    { header: 'First Name', field: 'first_name' },
     { header: 'Last Name', field: 'last_name' },
     { header: 'Age', field: 'age' }
   ]

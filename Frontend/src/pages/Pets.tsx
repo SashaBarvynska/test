@@ -12,7 +12,7 @@ const Pets = () => {
 
   const { data: pets = [] } = useQuery('pets', async () => {
     const { data } = await getPets()
-    return data.mypets
+    return data.pets
   })
 
   const columns = [

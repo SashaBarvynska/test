@@ -3,16 +3,13 @@ import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
 import { createMember } from '../../api/members'
 import { FormModal, FormInput } from '../../components'
+import { ValidationError } from '../../types/common'
 import { CreateMember, Member } from '../../types/member'
 
 interface AddMemberFormProps {
   onClose: VoidFunction
   addMemberToList: (member: Member) => void
 }
-
-type ValidationError = AxiosError<{
-  error: { fields: Record<string, string> }
-}>
 
 const AddMemberForm: FC<AddMemberFormProps> = ({
   onClose,
@@ -32,7 +29,7 @@ const AddMemberForm: FC<AddMemberFormProps> = ({
 
   const { mutate } = useMutation(() => createMember(newMember), {
     onSuccess: ({ data }) => {
-      addMemberToList(data.updated_member)
+      addMemberToList(data.created_member)
       onClose()
     },
     onError: (e: ValidationError) => {
