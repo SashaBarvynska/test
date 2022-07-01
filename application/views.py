@@ -159,7 +159,7 @@ def handle_all_members(request: HttpRequest):
         member.save()
         return JsonResponse(
             {
-                "createssd_member": {
+                "created_member": {
                     "id": member.pk,
                     "first_name": member.first_name,
                     "last_name": member.last_name,
