@@ -2,8 +2,10 @@ import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
 import { createPet } from '../../api/pets'
-import { FormModal, FormInput } from '../../components'
-import { ValidationError } from '../../types/common'
+import { FormModal, FormInput, FormSelect, useToast } from '../../components'
+import { Option } from '../../components/form/FormSelect'
+import { PetGenderEnum } from '../../constants/enums'
+import { isValidationError } from '../../helpers/isValidationError'
 import { CreatePet, Pet } from '../../types/pet'
 
 interface AddPetFormProps {
@@ -11,18 +13,29 @@ interface AddPetFormProps {
   addPetToList: (pet: Pet) => void
 }
 
-const AddPetForm: FC<AddPetFormProps> = ({
-  onClose,
-  addPetToList
-}) => {
-  const [newPet, setNewPet] = useState<CreatePet>({
-    name: '',
-    gender: '',
-    type: ''
-  })
+const defaultPet: CreatePet = {
+  name: '',
+  gender: '',
+  type: ''
+}
+
+const genderOptions: Option[] = [
+  { value: PetGenderEnum.male, title: 'Male' },
+  { value: PetGenderEnum.female, title: 'Female' }
+]
+
+const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
+  const [newPet, setNewPet] = useState<CreatePet>(defaultPet)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  const { addToast } = useToast()
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setNewPet((pet) => ({ ...pet, [name]: value }))
+  }
+
+  const handleSelect = (event: ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target
     setNewPet((pet) => ({ ...pet, [name]: value }))
   }
@@ -32,9 +45,14 @@ const AddPetForm: FC<AddPetFormProps> = ({
       addPetToList(data.created_pet)
       onClose()
     },
-    onError: (e: ValidationError) => {
-      if (e.response) {
+    onError: (e: AxiosError) => {
+      if (isValidationError(e) && e.response) {
         setErrors(e.response.data.error.fields)
+      } else {
+        addToast({
+          message: e.message,
+          type: 'error'
+        })
       }
     }
   })
@@ -57,12 +75,18 @@ const AddPetForm: FC<AddPetFormProps> = ({
         onChange={handleChange}
         errorMessage={errors['type_field']}
       />
-      <FormInput
+      <FormSelect
+        options={genderOptions}
         title="Gender"
         name="gender"
-        placeholder="Type gender..."
-        value={newPet.gender}
-        onChange={handleChange}
+        onChange={handleSelect}
+        errorMessage={errors['gender']}
+      />
+      <FormSelect
+        options={genderOptions}
+        title="Gender"
+        name="gender"
+        onChange={handleSelect}
         errorMessage={errors['gender']}
       />
     </FormModal>

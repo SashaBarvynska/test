@@ -3,3 +3,7 @@ export enum PetGenderEnum {
     female = 'female'
 }
 
+export enum CountryEnum {
+    error = 'error',
+    success = 'success'
+}

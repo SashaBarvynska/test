@@ -61,7 +61,7 @@ const StyledDataRow = styled.tr`
   font-family: cursive;
 
   :nth-child(even) {
-    background: #ede1e6;
+    background: var(--secondary);
   }
 `
 
