@@ -37,8 +37,8 @@ class Command(BaseCommand):
 
     def create_member(self):
         member = Members(
-            firstname=random.choice(FIRSTNAMES),
-            lastname=random.choice(LASTNAMES),
+            first_name=random.choice(FIRSTNAMES),
+            last_name=random.choice(LASTNAMES),
             age=random.randint(18, 65),
         )
         member.save()

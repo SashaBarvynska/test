@@ -3,8 +3,7 @@ import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
 import { createPet } from '../../api/pets'
 import { FormModal, FormInput, FormSelect, useToast } from '../../components'
-import { Option } from '../../components/form/FormSelect'
-import { PetGenderEnum } from '../../constants/enums'
+import { COUNTRY_OPTIONS, GENDER_OPTIONS } from '../../constants'
 import { isValidationError } from '../../helpers/isValidationError'
 import { CreatePet, Pet } from '../../types/pet'
 
@@ -15,14 +14,10 @@ interface AddPetFormProps {
 
 const defaultPet: CreatePet = {
   name: '',
+  type: '',
   gender: '',
-  type: ''
+  country: ''
 }
-
-const genderOptions: Option[] = [
-  { value: PetGenderEnum.male, title: 'Male' },
-  { value: PetGenderEnum.female, title: 'Female' }
-]
 
 const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
   const [newPet, setNewPet] = useState<CreatePet>(defaultPet)
@@ -30,20 +25,18 @@ const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
 
   const { addToast } = useToast()
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
-    setNewPet((pet) => ({ ...pet, [name]: value }))
-  }
-
-  const handleSelect = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target
     setNewPet((pet) => ({ ...pet, [name]: value }))
   }
 
   const { mutate } = useMutation(() => createPet(newPet), {
     onSuccess: ({ data }) => {
-      addPetToList(data.created_pet)
+      addPetToList(data.pet)
       onClose()
+      addToast({ message: 'Pet successfully created!', type: 'success' })
     },
     onError: (e: AxiosError) => {
       if (isValidationError(e) && e.response) {
@@ -76,18 +69,18 @@ const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
         errorMessage={errors['type_field']}
       />
       <FormSelect
-        options={genderOptions}
+        options={GENDER_OPTIONS}
         title="Gender"
         name="gender"
-        onChange={handleSelect}
+        onChange={handleChange}
         errorMessage={errors['gender']}
       />
       <FormSelect
-        options={genderOptions}
-        title="Gender"
-        name="gender"
-        onChange={handleSelect}
-        errorMessage={errors['gender']}
+        options={COUNTRY_OPTIONS}
+        title="Country"
+        name="country"
+        onChange={handleChange}
+        errorMessage={errors['country']}
       />
     </FormModal>
   )

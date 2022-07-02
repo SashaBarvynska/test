@@ -1,41 +1,47 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 interface TableProps<T> {
   records: T[]
-  columns: Column[]
+  columns: Column<T>[]
 }
 
-interface Column {
+export interface Column<T> {
   header: string
-  field: string
+  field: keyof T
+  customCell?: (data: T) => ReactElement
 }
 
 const Table = <T extends Record<string, any>>({
   records,
   columns
-}: TableProps<T>) => {
-  return (
-    <StyledTable>
-      <tbody>
-        <StyledHeaderRow>
-          {columns.map((column, index) => (
-            <StyledHeader key={index}>{column.header}</StyledHeader>
-          ))}
-        </StyledHeaderRow>
-        {records.map((record, index) => (
-          <StyledDataRow key={index}>
-            {columns.map((column, index) => (
+}: TableProps<T>) => (
+  <StyledTable>
+    <tbody>
+      <StyledHeaderRow>
+        {columns.map((column, index) => (
+          <StyledHeader key={index}>{column.header}</StyledHeader>
+        ))}
+      </StyledHeaderRow>
+      {records.map((record, index) => (
+        <StyledDataRow key={index}>
+          {columns.map((column, index) =>
+            column.customCell ? (
+              <StyledCustomDataCell key={index}>
+                {column.customCell(record)}
+              </StyledCustomDataCell>
+            ) : (
               <StyledDataCell key={index}>
                 {record[column.field]}
               </StyledDataCell>
-            ))}
-          </StyledDataRow>
-        ))}
-      </tbody>
-    </StyledTable>
-  )
-}
+            )
+          )}
+        </StyledDataRow>
+      ))}
+    </tbody>
+  </StyledTable>
+)
 
 const StyledTable = styled.table`
   width: 100%;
@@ -67,6 +73,12 @@ const StyledDataRow = styled.tr`
 
 const StyledDataCell = styled.td`
   padding-left: 1.5em;
+`
+
+const StyledCustomDataCell = styled.td`
+  display: flex;
+  padding-left: 2.8em;
+  align-items: center;
 `
 
 export { Table }

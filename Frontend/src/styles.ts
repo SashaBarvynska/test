@@ -7,6 +7,7 @@ const GlobalStyles = createGlobalStyle`
         --error: #EB5146;
         --white: #FDFDFD;
         --success: #48AD6A;
+        --hover: #ED8CB5;
     }
 
     body {

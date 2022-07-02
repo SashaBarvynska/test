@@ -82,6 +82,7 @@ const Select = styled.div`
   display: flex;
   align-items: center;
   border-radius: 0.2em;
+  cursor: pointer;
 `
 
 const OptionsGroup = styled.ul`
@@ -103,7 +104,8 @@ const Option = styled.li`
   padding-left: 1em;
 
   :hover {
-    background: var(--secondary);
+    color: var(--white);
+    background: var(--hover);
   }
 `
 

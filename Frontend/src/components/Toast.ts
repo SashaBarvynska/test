@@ -9,7 +9,7 @@ const useToast = () => {
 
   const addToast = ({ message, type, timeout = 5000 }: AddToast ) => {
     const notification = document.createElement('div')
-    notification.style.position = 'absolute'
+    notification.style.position = 'fixed'
     notification.style.top = '2em'
     notification.style.right = '2em'
     notification.style.zIndex = '999'

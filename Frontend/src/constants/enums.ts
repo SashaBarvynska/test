@@ -4,6 +4,9 @@ export enum PetGenderEnum {
 }
 
 export enum CountryEnum {
-    error = 'error',
-    success = 'success'
+    USA = "United States",
+    Germany = "Germany",
+    Ukraine = "Ukraine",
+    UK = "United Kingdom",
+    China = "China",
 }
