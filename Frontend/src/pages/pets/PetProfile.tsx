@@ -7,7 +7,7 @@ import { FiEdit as EditIcon } from 'react-icons/fi'
 import { MdDeleteOutline as DeleteIcon } from 'react-icons/md'
 import { UpdateMemberForm } from '../../modules/members/UpdateMemberForm'
 import { Member } from '../../types/member'
-import { ConfirmModal, InfoCard, useToast } from '../../components'
+import { ConfirmModal, InfoCard, Tooltip, useToast } from '../../components'
 import { Row } from '../../components/InfoCard'
 import { Pet } from '../../types/pet'
 import { deletePet, getPetProfile } from '../../api/pets'
@@ -81,14 +81,19 @@ const PetProfile = () => {
         </DeletedProfile>
       ) : (
         <InfoCard title="Pet profile" fields={pet} rows={rows}>
-          <StyledEditIcon
-            size={'1.4em'}
-            onClick={() => setIsOpenUpdateModal(true)}
-          />
-          <StyledDeleteIcon
-            size={'1.7em'}
-            onClick={() => setIsOpenConfirmModal(true)}
-          />
+          <Tooltip text="Edit pet">
+            <StyledEditIcon
+              size={'1.4em'}
+              onClick={() => setIsOpenUpdateModal(true)}
+            />
+          </Tooltip>
+
+          <Tooltip text="Delete pet">
+            <StyledDeleteIcon
+              size={'1.7em'}
+              onClick={() => setIsOpenConfirmModal(true)}
+            />
+          </Tooltip>
         </InfoCard>
       )}
 

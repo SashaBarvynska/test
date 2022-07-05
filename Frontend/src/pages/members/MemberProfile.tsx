@@ -9,7 +9,13 @@ import { MdDeleteOutline as DeleteIcon } from 'react-icons/md'
 import { AiOutlineMinusSquare as MinusIcon } from 'react-icons/ai'
 import { UpdateMemberForm } from '../../modules/members/UpdateMemberForm'
 import { Member } from '../../types/member'
-import { ConfirmModal, InfoCard, Table, useToast } from '../../components'
+import {
+  ConfirmModal,
+  InfoCard,
+  Table,
+  Tooltip,
+  useToast
+} from '../../components'
 import { Row } from '../../components/InfoCard'
 import { AxiosError } from 'axios'
 import { Column } from '../../components/Table'
@@ -135,16 +141,21 @@ const MemberProfile = () => {
       field: 'id',
       customCell: (data) => (
         <>
-          <Link to={String(data.id)}>
-            <StyledProfileIcon size={'1.7em'} />
-          </Link>
-          <StyledMinusIcon
-            size={'1.7em'}
-            onClick={() => {
-              setRemovePetId(data.id)
-              handleModal('removePet', 'open')
-            }}
-          />
+          <Tooltip text="Pet profile">
+            <Link to={String(data.id)}>
+              <StyledProfileIcon size={'1.7em'} />
+            </Link>
+          </Tooltip>
+
+          <Tooltip text="Remove member pet">
+            <StyledMinusIcon
+              size={'1.7em'}
+              onClick={() => {
+                setRemovePetId(data.id)
+                handleModal('removePet', 'open')
+              }}
+            />
+          </Tooltip>
         </>
       )
     }
@@ -160,26 +171,34 @@ const MemberProfile = () => {
       ) : (
         <>
           <InfoCard title="Member profile" fields={member} rows={rows}>
-            <StyledEditIcon
-              title="Update member"
-              size={'1.4em'}
-              onClick={() => handleModal('updateMember', 'open')}
-            />
-            <StyledDeleteIcon
-              title="Delete member"
-              size={'1.7em'}
-              onClick={() => handleModal('deleteMember', 'open')}
-            />
+            <Tooltip text="Update member">
+              <StyledEditIcon
+                size={'1.4em'}
+                onClick={() => handleModal('updateMember', 'open')}
+              />
+            </Tooltip>
+
+            <Tooltip text="Delete member">
+              <StyledDeleteIcon
+                size={'1.7em'}
+                onClick={() => handleModal('deleteMember', 'open')}
+              />
+            </Tooltip>
           </InfoCard>
 
           <PetsHeaderContainer>
             <PetsHeader>Member pets:</PetsHeader>
-            <Link to={`/members/${member.id}/adopt-pet`}>
-              <ActionIcon title="Adopt a pet" src={DogPlus} />
-            </Link>
-            <Link to={`/members/${member.id}/adopt-pet`}>
-              <ActionIcon title="Buy a pet" src={DogDollar} />
-            </Link>
+            <Tooltip text="Adopt a pet">
+              <Link to={`/members/${member.id}/adopt-pet`}>
+                <ActionIcon src={DogPlus} />
+              </Link>
+            </Tooltip>
+
+            <Tooltip text="Buy a pet">
+              <Link to={`/members/${member.id}/adopt-pet`}>
+                <ActionIcon src={DogDollar} />
+              </Link>
+            </Tooltip>
           </PetsHeaderContainer>
           <Table<Pet> records={pets} columns={columns} />
         </>
