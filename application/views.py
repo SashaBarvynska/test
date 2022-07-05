@@ -5,8 +5,8 @@ from .validators import CustomValidation
 
 # pets
 def adopt_pet(request, pet_id):  # PUT
-    put = QueryDict(request.body)
-    member_id = put.get("member_id")
+    data = json.loads(request.body)
+    member_id = data["member_id"]
     pet = Pets.objects.get(id=pet_id)
     pet.member_id = member_id
     pet.save()

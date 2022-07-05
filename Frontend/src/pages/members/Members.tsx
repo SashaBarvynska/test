@@ -96,6 +96,7 @@ const StyledProfileIcon = styled(ProfileIcon)`
 
 const StyledLink = styled(Link)`
   color: #6e3f56;
+  display: flex;
 `
 
 export { Members }

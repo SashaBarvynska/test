@@ -1,48 +1,28 @@
-import React, { Fragment, useState } from 'react'
-import { useQuery } from 'react-query'
-import { getPets } from '../../api/pets'
+import React, { FC, useState } from 'react'
+import { useMutation, useQuery } from 'react-query'
+import { adoptPet, getPets } from '../../api/pets'
 import { Column, Table } from '../../components/Table'
 import { Pet } from '../../types/pet'
 import styled from 'styled-components'
 import { Button } from '../../components/Button'
 import { AddPetForm } from '../../modules/pets/AddPetForm'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { MdAccountBox as ProfileIcon } from 'react-icons/md'
+import { AiOutlinePlusSquare as PlusIcon } from 'react-icons/ai'
 import { AxiosError } from 'axios'
-import { useToast } from '../../components'
+import { ConfirmModal, useToast } from '../../components'
 
-const columns: Column<Pet>[] = [
-  {
-    header: 'Name',
-    field: 'name'
-  },
-  {
-    header: 'Type',
-    field: 'type'
-  },
-  {
-    header: 'Gender',
-    field: 'gender'
-  },
-  {
-    header: 'Country',
-    field: 'country'
-  },
-  {
-    header: 'Actions',
-    field: 'id',
-    customCell: (data) => (
-      <StyledLink to={String(data.id)}>
-        <StyledProfileIcon size={'1.7em'} />
-      </StyledLink>
-    )
-  }
-]
+interface PetsProps {
+  isAdopt?: boolean
+}
 
-const Pets = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+const Pets: FC<PetsProps> = ({ isAdopt }) => {
+  const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false)
+  const [adoptPetId, setAdoptPetId] = useState<number>(NaN)
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
 
   const { addToast } = useToast()
+  const { memberId } = useParams()
 
   const { data: pets = [] } = useQuery(
     'pets',
@@ -62,24 +42,87 @@ const Pets = () => {
     }
   )
 
+  const { mutate } = useMutation(() => adoptPet(adoptPetId, Number(memberId)), {
+    onSuccess: () => {
+      setIsOpenConfirmModal(false)
+      addToast({ message: 'Pet successfully adopted!', type: 'success' })
+    },
+    onError: (e: AxiosError) => {
+      addToast({
+        message: e.message,
+        type: 'error'
+      })
+    }
+  })
+
   const addPetToList = (pet: Pet) => {
     pets.push(pet)
   }
 
+  const columns: Column<Pet>[] = [
+    {
+      header: 'Name',
+      field: 'name'
+    },
+    {
+      header: 'Type',
+      field: 'type'
+    },
+    {
+      header: 'Gender',
+      field: 'gender'
+    },
+    {
+      header: 'Country',
+      field: 'country'
+    },
+    {
+      header: 'Actions',
+      field: 'id',
+      customCell: (data) => (
+        <>
+          <ProfileIconLink to={String(data.id)}>
+            <StyledProfileIcon size={'1.7em'} />
+          </ProfileIconLink>
+          {isAdopt && (
+            <StyledPlusIcon
+              size={'1.6em'}
+              onClick={() => {
+                setAdoptPetId(data.id)
+                setIsOpenConfirmModal(true)
+              }}
+            />
+          )}
+        </>
+      )
+    }
+  ]
+
   return (
-    <Fragment>
+    <>
       <HeaderContainer>
         <StyledHeader>Pets:</StyledHeader>
-        <Button text="Add pet" onClick={() => setIsOpen(true)} />
+        {isAdopt ? (
+          <ReturnLink to={`/members/${memberId}`}>Return to profile</ReturnLink>
+        ) : (
+          <Button text="Add pet" onClick={() => setIsOpenAddModal(true)} />
+        )}
       </HeaderContainer>
       <Table<Pet> records={pets} columns={columns} />
-      {isOpen && (
+      {isOpenAddModal && (
         <AddPetForm
-          onClose={() => setIsOpen(false)}
+          onClose={() => setIsOpenAddModal(false)}
           addPetToList={addPetToList}
         />
       )}
-    </Fragment>
+      {isOpenConfirmModal && (
+        <ConfirmModal
+          message="Are you sure you want to adopt this pet?"
+          onConfirm={mutate}
+          onClose={() => setIsOpenConfirmModal(false)}
+        />
+      )}
+    </>
   )
 }
 
@@ -100,8 +143,26 @@ const StyledProfileIcon = styled(ProfileIcon)`
   color: #6e3f56;
 `
 
-const StyledLink = styled(Link)`
+const StyledPlusIcon = styled(PlusIcon)`
+  vertical-align: -webkit-baseline-middle;
   color: #6e3f56;
+  margin-left: 1.5em;
+  cursor: pointer;
+`
+
+const ProfileIconLink = styled(Link)`
+  color: #6e3f56;
+  display: flex;
+`
+
+const ReturnLink = styled(Link)`
+  color: #6e3f56;
+  font-family: cursive;
+  font-size: 1.3em;
+
+  :hover {
+    text-decoration: underline;
+  }
 `
 
 export { Pets }

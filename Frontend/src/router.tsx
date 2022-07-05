@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { Members, MemberProfile, Pets, PetProfile } from './pages'
+import { Members, MemberProfile, Pets, PetProfile, NotFound } from './pages'
 import { Navbar } from './components'
 import styled from 'styled-components'
 
@@ -14,6 +14,8 @@ const Router = () => (
         <Route path="members/:memberId" element={<MemberProfile />} />
         <Route path="pets" element={<Pets />} />
         <Route path="pets/:petId" element={<PetProfile />} />
+        <Route path="members/:memberId/adopt-pet" element={<Pets isAdopt />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Content>
   </BrowserRouter>

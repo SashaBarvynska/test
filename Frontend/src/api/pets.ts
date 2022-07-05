@@ -27,3 +27,14 @@ export const updatePet = (pet: UpdatePet): AxiosPromise<{ updated_pet: Pet }> =>
 export const deletePet = (petId: number): AxiosPromise<{deleted_pet: Pet}> => {
     return axios.delete(`${URL}/pets/${petId}`)
 }
+
+export const adoptPet = (petId: number, member_id: number): AxiosPromise<{ adopted_pet: Pet }> => {
+    const json = JSON.stringify({ member_id })
+    return axios.put(`${URL}/pets/${petId}/add`, json)
+}
+
+export const removePet = (petId: number): AxiosPromise<{ removed_pet: Pet }> => {
+    return axios.put(`${URL}/pets/${petId}/remove`)
+}
+
+
