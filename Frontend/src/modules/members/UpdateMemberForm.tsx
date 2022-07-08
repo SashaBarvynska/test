@@ -1,41 +1,37 @@
 import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { createMember } from '../../api/members'
+import { updateMember } from '../../api/members'
 import { FormModal, FormInput, useToast } from '../../components'
 import { isValidationError } from '../../helpers/isValidationError'
-import { CreateMember, Member } from '../../types/member'
+import { Member, UpdateMember } from '../../types/member'
 
-interface AddMemberFormProps {
+interface UpdateMemberFormProps {
+  member: UpdateMember
   onClose: VoidFunction
-  addMemberToList: (member: Member) => void
+  setMemberProfile: (member: Member) => void
 }
 
-const defaultMember: CreateMember = {
-  first_name: '',
-  last_name: '',
-  age: ''
-}
-
-const AddMemberForm: FC<AddMemberFormProps> = ({
+const UpdateMemberForm: FC<UpdateMemberFormProps> = ({
+  member,
   onClose,
-  addMemberToList
+  setMemberProfile
 }) => {
-  const [newMember, setNewMember] = useState<CreateMember>(defaultMember)
+  const [memberData, setMemberData] = useState<UpdateMember>(member)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { addToast } = useToast()
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    setNewMember((member) => ({ ...member, [name]: value }))
+    setMemberData((member) => ({ ...member, [name]: value }))
   }
 
-  const { mutate } = useMutation(() => createMember(newMember), {
+  const { mutate } = useMutation(() => updateMember(memberData), {
     onSuccess: ({ data }) => {
-      addMemberToList(data.created_member)
       onClose()
-      addToast({ message: 'Member successfully created!', type: 'success' })
+      addToast({ message: 'Member successfully updated!', type: 'success' })
+      setMemberProfile(data.updated_member)
     },
     onError: (e: AxiosError) => {
       if (isValidationError(e) && e.response) {
@@ -51,12 +47,12 @@ const AddMemberForm: FC<AddMemberFormProps> = ({
 
   return (
     <>
-      <FormModal title="Add member" onClose={onClose} onSubmit={mutate}>
+      <FormModal title="Update member" onClose={onClose} onSubmit={mutate}>
         <FormInput
           title="First Name"
           name="first_name"
           placeholder="Type first name..."
-          value={newMember.first_name}
+          value={memberData.first_name}
           onChange={handleChange}
           errorMessage={errors['first_name']}
           maxLength={25}
@@ -65,7 +61,7 @@ const AddMemberForm: FC<AddMemberFormProps> = ({
           title="Last Name"
           name="last_name"
           placeholder="Type last name..."
-          value={newMember.last_name}
+          value={memberData.last_name}
           onChange={handleChange}
           errorMessage={errors['last_name']}
           maxLength={25}
@@ -75,7 +71,7 @@ const AddMemberForm: FC<AddMemberFormProps> = ({
           title="Age"
           name="age"
           placeholder="Type age..."
-          value={newMember.age}
+          value={memberData.age}
           min={1}
           max={99}
           onChange={handleChange}
@@ -86,4 +82,4 @@ const AddMemberForm: FC<AddMemberFormProps> = ({
   )
 }
 
-export { AddMemberForm }
+export { UpdateMemberForm }

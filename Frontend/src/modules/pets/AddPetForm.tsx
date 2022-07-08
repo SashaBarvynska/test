@@ -2,8 +2,9 @@ import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
 import { createPet } from '../../api/pets'
-import { FormModal, FormInput } from '../../components'
-import { ValidationError } from '../../types/common'
+import { FormModal, FormInput, FormSelect, useToast } from '../../components'
+import { COUNTRY_OPTIONS, GENDER_OPTIONS } from '../../constants'
+import { isValidationError } from '../../helpers/isValidationError'
 import { CreatePet, Pet } from '../../types/pet'
 
 interface AddPetFormProps {
@@ -11,30 +12,40 @@ interface AddPetFormProps {
   addPetToList: (pet: Pet) => void
 }
 
-const AddPetForm: FC<AddPetFormProps> = ({
-  onClose,
-  addPetToList
-}) => {
-  const [newPet, setNewPet] = useState<CreatePet>({
-    name: '',
-    gender: '',
-    type: ''
-  })
+const defaultPet: CreatePet = {
+  name: '',
+  type: '',
+  gender: '',
+  country: ''
+}
+
+const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
+  const [newPet, setNewPet] = useState<CreatePet>(defaultPet)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const { addToast } = useToast()
+
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target
     setNewPet((pet) => ({ ...pet, [name]: value }))
   }
 
   const { mutate } = useMutation(() => createPet(newPet), {
     onSuccess: ({ data }) => {
-      addPetToList(data.created_pet)
+      addPetToList(data.pet)
       onClose()
+      addToast({ message: 'Pet successfully created!', type: 'success' })
     },
-    onError: (e: ValidationError) => {
-      if (e.response) {
+    onError: (e: AxiosError) => {
+      if (isValidationError(e) && e.response) {
         setErrors(e.response.data.error.fields)
+      } else {
+        addToast({
+          message: e.message,
+          type: 'error'
+        })
       }
     }
   })
@@ -57,13 +68,19 @@ const AddPetForm: FC<AddPetFormProps> = ({
         onChange={handleChange}
         errorMessage={errors['type_field']}
       />
-      <FormInput
+      <FormSelect
+        options={GENDER_OPTIONS}
         title="Gender"
         name="gender"
-        placeholder="Type gender..."
-        value={newPet.gender}
         onChange={handleChange}
         errorMessage={errors['gender']}
+      />
+      <FormSelect
+        options={COUNTRY_OPTIONS}
+        title="Country"
+        name="country"
+        onChange={handleChange}
+        errorMessage={errors['country']}
       />
     </FormModal>
   )

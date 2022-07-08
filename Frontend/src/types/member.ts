@@ -8,3 +8,7 @@ export interface Member {
 export interface CreateMember extends Omit<Member, 'id' | 'age'> {
     age: string
 }
+
+export interface UpdateMember extends Omit<Member, 'age'> {
+    age: string
+}

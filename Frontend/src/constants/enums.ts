@@ -3,3 +3,10 @@ export enum PetGenderEnum {
     female = 'female'
 }
 
+export enum CountryEnum {
+    USA = "United States",
+    Germany = "Germany",
+    Ukraine = "Ukraine",
+    UK = "United Kingdom",
+    China = "China",
+}

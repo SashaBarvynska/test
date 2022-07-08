@@ -1,3 +1,4 @@
+import json
 from django.http import JsonResponse, HttpRequest, QueryDict
 from .models import Addresses, Members, Pets, Wallets
 from .validators import CustomValidation
@@ -5,8 +6,8 @@ from django.db.models import F
 
 # pets
 def adopt_pet(request, pet_id):  # PUT
-    put = QueryDict(request.body)
-    member_id = put.get("member_id")
+    data = json.loads(request.body)
+    member_id = data["member_id"]
     pet = Pets.objects.get(id=pet_id)
     pet.member_id = member_id
     pet.save()
@@ -65,22 +66,19 @@ def handle_member(request: HttpRequest, id):
         )
 
     if request.method == "PUT":
-        put = QueryDict(request.body)
-        first_name = put.get("first_name")
-        last_name = put.get("last_name")
-        age = put.get("age")
+        data = json.loads(request.body)
         validated = CustomValidation(
             {
                 "first_name": {
-                    "value": first_name,
+                    "value": data['first_name'],
                     "validators": {"type": "str", "maxlength": 10, "minlength": 3},
                 },
                 "last_name": {
-                    "value": last_name,
+                    "value": data['last_name'],
                     "validators": {"type": "str", "maxlength": 8, "minlength": 3},
                 },
                 "age": {
-                    "value": age,
+                    "value": data['age'],
                     "validators": {"type": "int", "max_value": 99, "min_value": 1},
                 },
             }
@@ -90,17 +88,17 @@ def handle_member(request: HttpRequest, id):
             return validated.get_errors()
 
         member = Members.objects.get(id=id)
-        member.first_name = first_name
-        member.last_name = last_name
-        member.age = age
+        member.first_name = data['first_name']
+        member.last_name = data['last_name']
+        member.age = data['age']
         member.save()
         return JsonResponse(
             {
                 "updated_member": {
                     "id": member.pk,
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "age": age,
+                    "first_name": member.first_name,
+                    "last_name": member.last_name,
+                    "age": member.age,
                 },
             }
         )
@@ -112,9 +110,9 @@ def handle_member(request: HttpRequest, id):
             {
                 "deleted_member": {
                     "id": member.pk,
-                    "first_name": first_,
-                    "last_name": last_,
-                    "age": age,
+                    "first_name": member.first_name,
+                    "last_name": member.last_name,
+                    "age": member.age,
                 },
             }
         )
@@ -196,24 +194,19 @@ def handle_pet(request: HttpRequest, id):
         )
 
     if request.method == "PUT":
-
-        put = QueryDict(request.body)
-        name: str = put.get("name")
-        type_field = put.get("type_field")
-        gender = put.get("gender")
-        country = put.get("country")
+        data = json.loads(request.body)
         validated = CustomValidation(
             {
                 "name": {
-                    "value": name,
+                    "value": data['name'],
                     "validators": {"type": "str", "maxlength": 10, "minlength": 3},
                 },
                 "type_field": {
-                    "value": type_field,
+                    "value": data['type'],
                     "validators": {"type": "str", "maxlength": 8, "minlength": 3},
                 },
                 "gender": {
-                    "value": gender,
+                    "value": data['gender'],
                     "validators": {"type": "str", "maxlength": 10, "minlength": 3},
                 },
             }
@@ -223,14 +216,14 @@ def handle_pet(request: HttpRequest, id):
             return validated.get_errors()
 
         pet = Pets.objects.get(id=id)
-        pet.name = name
-        pet.type = type_field
-        pet.gender = gender
-        pet.country = country
+        pet.name = data['name']
+        pet.type = data['type']
+        pet.gender = data['gender']
+        pet.country = data['country']
         pet.save()
         return JsonResponse(
             {
-                "created_pet": {
+                "updated_pet": {
                     "id": pet.pk,
                     "name": pet.name,
                     "type": pet.type,

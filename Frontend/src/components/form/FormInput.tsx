@@ -6,6 +6,9 @@ interface FormInputProps {
   name: string
   onChange: ChangeEventHandler<HTMLInputElement>
   type?: 'string' | 'number'
+  min?: number
+  max?: number
+  maxLength?: number
   title?: string
   placeholder?: string
   errorMessage?: string
@@ -15,10 +18,13 @@ const FormInput: FC<FormInputProps> = ({
   value,
   name,
   onChange,
+  errorMessage,
   type = 'string',
   title = 'Input title',
   placeholder = 'Placeholder...',
-  errorMessage
+  min = -9999,
+  max = 9999,
+  maxLength = 255
 }) => (
   <>
     <Title>{title}</Title>
@@ -28,6 +34,9 @@ const FormInput: FC<FormInputProps> = ({
       onChange={onChange}
       type={type}
       placeholder={placeholder}
+      min={min}
+      max={max}
+      maxLength={maxLength}
     />
     {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
   </>

@@ -7,6 +7,7 @@ const Navbar: FC = () => (
     <TabContainer>
       <Tab to="members">Members</Tab>
       <Tab to="pets">Pets</Tab>
+      <Tab to="market">Market</Tab>
     </TabContainer>
   </Container>
 )
@@ -19,7 +20,7 @@ const Container = styled.div`
 const TabContainer = styled.div`
   display: flex;
   align-items: center;
-  width: 17%;
+  width: 25%;
   height: 100%;
   margin-left: 15%;
 `
