@@ -43,7 +43,9 @@ class Wallets(models.Model):
         default=Currencies.dollar,
     )
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    member = models.ForeignKey(Members, on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(
+        Members, on_delete=models.CASCADE, null=True, related_name="Wallets"
+    )
 
 
 class Addresses(models.Model):
@@ -52,7 +54,9 @@ class Addresses(models.Model):
         choices=Countries.choices,
         default=Countries.USA,
     )
-    member = models.ForeignKey(Members, on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(
+        Members, on_delete=models.CASCADE, null=True, related_name="Addresses"
+    )
     phone_number = models.CharField(max_length=11)
     city = models.CharField(max_length=30)
 

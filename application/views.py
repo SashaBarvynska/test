@@ -1,6 +1,7 @@
 from django.http import JsonResponse, HttpRequest, QueryDict
-from .models import Members, Pets, Wallets
+from .models import Addresses, Members, Pets, Wallets
 from .validators import CustomValidation
+from django.db.models import F
 
 # pets
 def adopt_pet(request, pet_id):  # PUT
@@ -43,6 +44,7 @@ def remove_pet(request, pet_id):  # PUT
 
 def handle_member(request: HttpRequest, id):
     if request.method == "GET":
+
         member = Members.objects.get(id=id)
 
         try:
@@ -120,11 +122,18 @@ def handle_member(request: HttpRequest, id):
 
 def handle_all_members(request: HttpRequest):
     if request.method == "GET":
-        mymembers = Members.objects.all().values()
-
-        for mymember in mymembers:
-            mymember["fullname"] = mymember["first_name"] + " " + mymember["last_name"]
-
+        mymembers = Members.objects.all().values(
+            "first_name",
+            "last_name",
+            "age",
+            "id",
+            country=F("Addresses__country"),
+            phone_number=F("Addresses__phone_number"),
+            city=F("Addresses__city"),
+            currency=F("Wallets__currency"),
+            amount=F("Wallets__amount"),
+        )
+        print("****************************** ", mymembers.query)
         return JsonResponse(
             {
                 "members": list(mymembers),
