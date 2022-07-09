@@ -2,7 +2,7 @@ from distutils.command import register
 from django.db import models
 
 
-class Members(models.Model):
+class Users(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     age = models.SmallIntegerField(null=True)
@@ -22,7 +22,7 @@ class Pets(models.Model):
         choices=Countries.choices,
         default=Countries.USA,
     )
-    member = models.ForeignKey(Members, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
@@ -42,9 +42,9 @@ class Wallets(models.Model):
         choices=Currencies.choices,
         default=Currencies.dollar,
     )
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
-    member = models.ForeignKey(
-        Members, on_delete=models.CASCADE, null=True, related_name="Wallets"
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    user = models.ForeignKey(
+        Users, on_delete=models.CASCADE, null=True, related_name="Wallets"
     )
 
 
@@ -54,8 +54,8 @@ class Addresses(models.Model):
         choices=Countries.choices,
         default=Countries.USA,
     )
-    member = models.ForeignKey(
-        Members, on_delete=models.CASCADE, null=True, related_name="Addresses"
+    user = models.ForeignKey(
+        Users, on_delete=models.CASCADE, null=True, related_name="Addresses"
     )
     phone_number = models.CharField(max_length=11)
     city = models.CharField(max_length=30)

@@ -1,11 +1,11 @@
 from django.urls import path
-from . import views
+from .views import users, pets
 
 urlpatterns = [
-    path("members", views.handle_all_members, name="handle_all_members"),  
-    path("members/<int:id>", views.handle_member, name="handle_member"),
-    path("pets", views.handle_all_pets, name="handle_all_pets"),
-    path("pets/<int:id>", views.handle_pet, name="handle_pet"),
-    path("pets/<int:pet_id>/add", views.adopt_pet, name="adopt_pet"),
-    path("pets/<int:pet_id>/remove", views.remove_pet, name="remove_pet"),
+    path("users", users.handle_all_users, name="handle_all_users"),
+    path("users/<int:id>", users.handle_user, name="handle_user"),
+    path("pets", pets.handle_all_pets, name="handle_all_pets"),
+    path("pets/<int:id>", pets.handle_pet, name="handle_pet"),
+    path("pets/<int:pet_id>/add", pets.adopt_pet, name="adopt_pet"),
+    path("pets/<int:pet_id>/remove", pets.remove_pet, name="remove_pet"),
 ]
