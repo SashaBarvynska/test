@@ -27,7 +27,7 @@ class Command(BaseCommand):
         self.create_currency_country(Countries.UK, Currencies.pound)
         self.create_currency_country(Countries.Ukraine, Currencies.hryvnia)
 
-        Members.objects.all().delete()
+        Users.objects.all().delete()
         Pets.objects.all().delete()
         Wallets.objects.all().delete()
 
@@ -36,7 +36,7 @@ class Command(BaseCommand):
             self.create_pet()
 
     def create_member(self):
-        member = Members(
+        member = Users(
             first_name=random.choice(FIRSTNAMES),
             last_name=random.choice(LASTNAMES),
             age=random.randint(18, 65),

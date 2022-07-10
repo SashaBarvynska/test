@@ -1,20 +1,26 @@
 import json
 from django.http import JsonResponse, HttpRequest
-from ..models import Addresses, Users, Pets, Wallets
+from ..models import Users, Pets
 from ..validators import CustomValidation
-from django.db.models import F
 
 
 def handle_user(request: HttpRequest, id):
     if request.method == "GET":
+        # получаем юзера по айди из запроса
         user = Users.objects.get(id=id)
-        address = user.Addresses.all()[0]
-        wallet = user.Wallets.all()[0]
+        # получаем все адреса конкретного юзера
+        addresses = user.Addresses.all().values()
+        # получаем все кошельки конкретного юзера
+        wallets = user.Wallets.all().values()
+        # если у конкретного юзера есть петсы
         try:
+            # получаем петсов конкретного юзера
             pets = Pets.objects.filter(user_id=id).values()
+        # если петсы отсутствуют у юзера
         except Pets.DoesNotExist:
+            # получаем пустой список
             pets = []
-
+        # отправляем ответ
         return JsonResponse(
             {
                 "user": {
@@ -22,18 +28,17 @@ def handle_user(request: HttpRequest, id):
                     "first_name": user.first_name,
                     "last_name": user.last_name,
                     "age": user.age,
-                    "country": address.country,
-                    "phone_number": address.phone_number,
-                    "city": address.city,
-                    "currency": wallet.currency,
-                    "amount": wallet.amount,
                 },
+                "addresses": list(addresses),
+                "wallets": list(wallets),
                 "pets": list(pets),
             }
         )
 
     if request.method == "PUT":
+        # получаем данные из запроса в формате json (словарик)
         data = json.loads(request.body)
+        # валидация полученных данных
         validated = CustomValidation(
             {
                 "first_name": {
@@ -42,66 +47,28 @@ def handle_user(request: HttpRequest, id):
                 },
                 "last_name": {
                     "value": data["last_name"],
-                    "validators": {"type": "str", "max_length": 25, "min_length": 2},
+                    "validators": {"type": "str", "max_length": 25, "min_length": 1},
                 },
                 "age": {
                     "value": data["age"],
                     "validators": {"type": "int", "max_value": 99, "min_value": 1},
                 },
-                "country": {
-                    "value": data["country"],
-                    "validators": {
-                        "type": "str",
-                        "max_length": 25,
-                        "min_length": 2,
-                        "enum": [
-                            "United States",
-                            "Germany",
-                            "Ukraine",
-                            "United Kingdom",
-                            "China",
-                        ],
-                    },
-                },
-                "phone_number": {
-                    "value": data["phone_number"],
-                    "validators": {
-                        "type": "int",
-                        "length": 11,
-                    },
-                },
-                "amount": {
-                    "value": data["amount"],
-                    "validators": {
-                        "type": "int",
-                        "max_amount": 1000,
-                        "min_amount": 1,
-                    },
-                },
-                "city": {
-                    "value": data["city"],
-                    "validators": {"type": "str", "max_length": 25, "min_length": 2},
-                },
-            },
+            }
         )
 
+        # если данные не правильные,
         if validated.is_valid == False:
+            # возвращаем ошибки
             return validated.get_errors()
-
+        # получаем юзера по айди
         user = Users.objects.get(id=id)
-        address = Addresses.objects.get(user_id=id)
-        wallet = Wallets.objects.get(user_id=id)
+        # заменяем старые данные - новыми данными из запроса
         user.first_name = data["first_name"]
         user.last_name = data["last_name"]
         user.age = data["age"]
-        address.country = data["country"]
-        address.city = data["city"]
-        address.phone_number = data["phone_number"]
-        wallet.currency = data["currency"]
-        wallet.amount = data["amount"]
+        # сохраняем юзера в базу данных
         user.save()
-        address.save()
-        wallet.save()
+        # отправляем ответ
         return JsonResponse(
             {
                 "updated_user": {
@@ -109,20 +76,16 @@ def handle_user(request: HttpRequest, id):
                     "first_name": user.first_name,
                     "last_name": user.last_name,
                     "age": user.age,
-                    "country": address.country,
-                    "city": address.city,
-                    "phone_number": address.phone_number,
-                    "currency": wallet.currency,
-                    "amount": wallet.amount,
                 },
             }
         )
 
     if request.method == "DELETE":
+        # получаем юзера по айди
         user = Users.objects.get(id=id)
-        address = user.Addresses.all()[0]
-        wallet = user.Wallets.all()[0]
+        # удаляяем юзера
         user.delete()
+        # отправляем ответ
         return JsonResponse(
             {
                 "deleted_user": {
@@ -130,11 +93,6 @@ def handle_user(request: HttpRequest, id):
                     "first_name": user.first_name,
                     "last_name": user.last_name,
                     "age": user.age,
-                    "country": address.country,
-                    "phone_number": address.phone_number,
-                    "city": address.city,
-                    "currency": wallet.currency,
-                    "amount": wallet.amount,
                 },
             }
         )
@@ -142,18 +100,19 @@ def handle_user(request: HttpRequest, id):
 
 def handle_all_users(request: HttpRequest):
     if request.method == "GET":
+        # получаем список юзеров из базы данных
         users = Users.objects.all().values(
-            "first_name",
-            "last_name",
-            "age",
-            "id",
-            country=F("Addresses__country"),
-            phone_number=F("Addresses__phone_number"),
-            city=F("Addresses__city"),
-            currency=F("Wallets__currency"),
-            amount=F("Wallets__amount"),
+            # "first_name",
+            # "last_name",
+            # "age",
+            # "id",
+            # country=F("Addresses__country"),
+            # phone_number=F("Addresses__phone_number"),
+            # city=F("Addresses__city"),
+            # currency=F("Wallets__currency"),
+            # amount=F("Wallets__amount"),
         )
-
+        # отправляем ответ
         return JsonResponse(
             {
                 "users": list(users),
@@ -161,16 +120,14 @@ def handle_all_users(request: HttpRequest):
         )
 
     if request.method == "POST":
+        # получаем данные из запроса в формате json (словарик)
         data = json.loads(request.body)
+        # записываем данные из запроса в переменные
         first_name = data["first_name"]
         last_name = data["last_name"]
         age = data["age"]
-        country = data["country"]
-        city = data["city"]
-        phone_number = data["phone_number"]
-        currency = data["currency"]
-        amount = data["amount"]
 
+        # валидация полученных данных
         validated = CustomValidation(
             {
                 "first_name": {
@@ -185,54 +142,18 @@ def handle_all_users(request: HttpRequest):
                     "value": age,
                     "validators": {"type": "int", "max_value": 99, "min_value": 1},
                 },
-                "country": {
-                    "value": data["country"],
-                    "validators": {
-                        "type": "str",
-                        "max_length": 25,
-                        "min_length": 2,
-                        "enum": [
-                            "United States",
-                            "Germany",
-                            "Ukraine",
-                            "United Kingdom",
-                            "China",
-                        ],
-                    },
-                },
-                "phone_number": {
-                    "value": data["phone_number"],
-                    "validators": {
-                        "type": "int",
-                        "length": 11,
-                    },
-                },
-                "amount": {
-                    "value": data["amount"],
-                    "validators": {
-                        "type": "int",
-                        "max_amount": 1000,
-                        "min_amount": 1,
-                    },
-                },
-                "city": {
-                    "value": data["city"],
-                    "validators": {"type": "str", "max_length": 25, "min_length": 2},
-                },
             }
         )
 
+        # если данные не правильные,
         if validated.is_valid == False:
+            # возвращаем ошибки
             return validated.get_errors()
-
+        # Создаем юзера из ролученных данных
         user = Users(first_name=first_name, last_name=last_name, age=age)
+        # сохраняем юзера в базу данных
         user.save()
-        address = Addresses(
-            country=country, city=city, phone_number=phone_number, user_id=user.id
-        )
-        address.save()
-        wallet = Wallets(currency=currency, amount=amount, user_id=user.id)
-        wallet.save()
+        # отправляем ответ
         return JsonResponse(
             {
                 "created_member": {
@@ -240,11 +161,6 @@ def handle_all_users(request: HttpRequest):
                     "first_name": user.first_name,
                     "last_name": user.last_name,
                     "age": user.age,
-                    "country": address.country,
-                    "city": address.city,
-                    "phone_number": address.phone_number,
-                    "currency": wallet.currency,
-                    "amount": wallet.amount,
                 },
             }
         )

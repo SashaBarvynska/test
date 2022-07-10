@@ -40,7 +40,6 @@ class CustomValidation:
                 if value.isdigit() == False:
                     self.__error_fields[field_name] = f"value must be in number "
 
-
                 if "length" in data["validators"]:
                     length = data["validators"]["length"]
                     if len(value) != length:
