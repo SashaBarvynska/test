@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { createPet } from '../../api/pets'
+import { createPet } from '../../api/pet'
 import { FormModal, FormInput, FormSelect, useToast } from '../../components'
 import { COUNTRY_OPTIONS, GENDER_OPTIONS } from '../../constants'
 import { isValidationError } from '../../helpers/isValidationError'
@@ -19,15 +19,13 @@ const defaultPet: CreatePet = {
   country: ''
 }
 
-const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
+export const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
   const [newPet, setNewPet] = useState<CreatePet>(defaultPet)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { addToast } = useToast()
 
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target
     setNewPet((pet) => ({ ...pet, [name]: value }))
   }
@@ -85,5 +83,3 @@ const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
     </FormModal>
   )
 }
-
-export { AddPetForm }

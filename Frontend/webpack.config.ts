@@ -35,6 +35,7 @@ const config: Configuration = {
     extensions: [".tsx", ".ts", ".js"],
   },
   output: {
+    publicPath: '/',
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
   },
@@ -43,6 +44,7 @@ const config: Configuration = {
     compress: true,
     port: 4000,
     historyApiFallback: true,
+    
   },
 };
 

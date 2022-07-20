@@ -1,7 +1,7 @@
 import React, { FC, ChangeEventHandler } from 'react'
 import styled from 'styled-components'
 
-interface FormInputProps {
+export interface FormInputProps {
   value: string
   name: string
   onChange: ChangeEventHandler<HTMLInputElement>
@@ -14,7 +14,7 @@ interface FormInputProps {
   errorMessage?: string
 }
 
-const FormInput: FC<FormInputProps> = ({
+export const FormInput: FC<FormInputProps> = ({
   value,
   name,
   onChange,
@@ -61,5 +61,3 @@ const ErrorMessage = styled.p`
   color: red;
   font-family: cursive;
 `
-
-export { FormInput }

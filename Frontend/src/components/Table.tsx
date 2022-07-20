@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { RecordValue } from '../types/common'
 
 interface TableProps<T> {
   records: T[]
@@ -13,7 +13,7 @@ export interface Column<T> {
   customCell?: (data: T) => ReactElement
 }
 
-const Table = <T extends Record<string, any>>({
+export const Table = <T extends Record<keyof T, RecordValue>>({
   records,
   columns
 }: TableProps<T>) => (
@@ -33,16 +33,14 @@ const Table = <T extends Record<string, any>>({
                   {column.customCell(record)}
                 </StyledCustomDataCell>
               ) : (
-                <StyledDataCell key={index}>
-                  {record[column.field]}
-                </StyledDataCell>
+                <StyledDataCell key={index}>{record[column.field]}</StyledDataCell>
               )
             )}
           </StyledDataRow>
         ))
       ) : (
         <tr>
-          <StyledNoData colSpan={4}>No data to display...</StyledNoData>
+          <StyledNoData colSpan={columns.length}>No data to display...</StyledNoData>
         </tr>
       )}
     </tbody>
@@ -93,5 +91,3 @@ const StyledNoData = styled.td`
   font-size: 1.7em;
   font-weight: bold;
 `
-
-export { Table }

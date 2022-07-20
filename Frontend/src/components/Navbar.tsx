@@ -2,10 +2,10 @@ import React, { FC } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-const Navbar: FC = () => (
+export const Navbar: FC = () => (
   <Container>
     <TabContainer>
-      <Tab to="members">Members</Tab>
+      <Tab to="users">Users</Tab>
       <Tab to="pets">Pets</Tab>
       <Tab to="market">Market</Tab>
     </TabContainer>
@@ -40,5 +40,3 @@ const Tab = styled(Link)`
     color: #ed8cb5;
   }
 `
-
-export { Navbar }

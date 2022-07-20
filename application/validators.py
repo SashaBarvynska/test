@@ -10,7 +10,7 @@ class CustomValidation:
 
     def __validate(self, fields: dict):
         for field_name, data in fields.items():
-            value: str = data["value"]
+            value: str | int = data["value"]
             if data["validators"]["type"] == "str":
 
                 max_length = data["validators"]["max_length"]
@@ -37,7 +37,7 @@ class CustomValidation:
                         ] = f"Value should be one of {data['validators']['enum']}"
 
             if data["validators"]["type"] == "int":
-                if value.isdigit() == False:
+                if type(value) == str and value.isdigit() == False:
                     self.__error_fields[field_name] = f"value must be in number "
 
                 if "length" in data["validators"]:

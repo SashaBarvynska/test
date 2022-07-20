@@ -9,9 +9,9 @@ def handle_user(request: HttpRequest, id):
         # получаем юзера по айди из запроса
         user = Users.objects.get(id=id)
         # получаем все адреса конкретного юзера
-        addresses = user.Addresses.all().values()
+        address = user.Addresses.first()
         # получаем все кошельки конкретного юзера
-        wallets = user.Wallets.all().values()
+        wallet = user.Wallets.first()
         # если у конкретного юзера есть петсы
         try:
             # получаем петсов конкретного юзера
@@ -21,19 +21,31 @@ def handle_user(request: HttpRequest, id):
             # получаем пустой список
             pets = []
         # отправляем ответ
-        return JsonResponse(
-            {
-                "user": {
-                    "id": user.id,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "age": user.age,
-                },
-                "addresses": list(addresses),
-                "wallets": list(wallets),
-                "pets": list(pets),
-            }
-        )
+        response = {
+            "user": {
+                "id": user.id,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "age": user.age,
+            },
+            "address": None,
+            "wallet": None,
+            "pets": list(pets),
+        }
+        if(address):
+            response.update({"address": {
+                "id": address.id,
+                "country": address.country,
+                "city": address.city,
+                "phone_number": address.phone_number,
+            }}),
+        if(wallet):
+            response.update({"wallet": {
+                "id": wallet.id,
+                "currency": wallet.currency,
+                "amount": wallet.amount,
+            }}),
+        return JsonResponse(response)
 
     if request.method == "PUT":
         # получаем данные из запроса в формате json (словарик)
@@ -69,16 +81,14 @@ def handle_user(request: HttpRequest, id):
         # сохраняем юзера в базу данных
         user.save()
         # отправляем ответ
-        return JsonResponse(
-            {
-                "updated_user": {
-                    "id": user.pk,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "age": user.age,
+        return JsonResponse({
+            "updated_user": {
+                "id": user.pk,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "age": user.age,
                 },
-            }
-        )
+            })
 
     if request.method == "DELETE":
         # получаем юзера по айди

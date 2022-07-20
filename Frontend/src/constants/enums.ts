@@ -10,3 +10,11 @@ export enum CountryEnum {
     UK = "United Kingdom",
     China = "China",
 }
+
+export enum CurrencyEnum {
+    dollar = "USD",
+    euro = "EU",
+    hryvnia = "UAH",
+    pound = "GBD",
+    yuan = "CNY",
+}

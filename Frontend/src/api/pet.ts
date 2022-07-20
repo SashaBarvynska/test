@@ -7,12 +7,7 @@ export const getPets = (): AxiosPromise<{pets: Pet[]}> => {
 }
 
 export const createPet = (pet: CreatePet):AxiosPromise<{pet: Pet}>  => {
-    const formData = new FormData()
-    formData.append('name', pet.name)
-    formData.append('type', pet.type)
-    formData.append('gender', pet.gender)
-    formData.append('country', pet.country)
-    return axios.post(`${URL}/pets`, formData)
+    return axios.post(`${URL}/pets`, pet)
 }
 
 export const getPetProfile = (petId: number): AxiosPromise<{pet: Pet}> => {
@@ -20,17 +15,16 @@ export const getPetProfile = (petId: number): AxiosPromise<{pet: Pet}> => {
 }
 
 export const updatePet = (pet: UpdatePet): AxiosPromise<{ updated_pet: Pet }> => {
-    const json = JSON.stringify(pet)
-    return axios.put(`${URL}/pets/${pet.id}`, json)
+    return axios.put(`${URL}/pets/${pet.id}`, pet)
 }
 
 export const deletePet = (petId: number): AxiosPromise<{deleted_pet: Pet}> => {
     return axios.delete(`${URL}/pets/${petId}`)
 }
 
-export const adoptPet = (petId: number, member_id: number): AxiosPromise<{ adopted_pet: Pet }> => {
-    const json = JSON.stringify({ member_id })
-    return axios.put(`${URL}/pets/${petId}/add`, json)
+export const adoptPet = (petId: number, user_id: number): AxiosPromise<{ adopted_pet: Pet }> => {
+    const data = { user_id }
+    return axios.put(`${URL}/pets/${petId}/add`, data)
 }
 
 export const removePet = (petId: number): AxiosPromise<{ removed_pet: Pet }> => {

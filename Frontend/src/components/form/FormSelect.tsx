@@ -1,7 +1,7 @@
 import React, { ChangeEvent, ChangeEventHandler, FC, useState } from 'react'
-import styled, { ThemedStyledProps } from 'styled-components'
+import styled from 'styled-components'
 
-interface FormSelectProps {
+export interface FormSelectProps {
   options: Option[]
   name: string
   onChange: ChangeEventHandler<HTMLSelectElement>
@@ -15,7 +15,7 @@ export interface Option {
   title: string
 }
 
-const FormSelect: FC<FormSelectProps> = ({
+export const FormSelect: FC<FormSelectProps> = ({
   options,
   name,
   onChange,
@@ -114,5 +114,3 @@ const ErrorMessage = styled.p`
   color: red;
   font-family: cursive;
 `
-
-export { FormSelect }

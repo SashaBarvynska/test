@@ -4,7 +4,7 @@ interface AddToast {
   timeout?: number
 }
 
-const useToast = () => {
+export const useToast = () => {
   const root = document.getElementById('root') as HTMLElement
 
   const addToast = ({ message, type, timeout = 5000 }: AddToast ) => {
@@ -33,5 +33,3 @@ const useToast = () => {
 
   return { addToast }
 }
-
-export { useToast }

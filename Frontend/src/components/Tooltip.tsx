@@ -2,11 +2,11 @@ import React, { FC, ReactElement } from 'react'
 import styled from 'styled-components'
 
 interface TooltipProps {
-  text: string
+  text?: string
   children: ReactElement
 }
 
-const Tooltip: FC<TooltipProps> = ({ text, children }) => (
+export const Tooltip: FC<TooltipProps> = ({ text = 'Tooltip text...', children }) => (
   <Wrapper>
     <div className="tooltip">{text}</div>
     {children}
@@ -32,5 +32,3 @@ const Wrapper = styled.div`
     background: var(--hover);
   }
 `
-
-export { Tooltip }

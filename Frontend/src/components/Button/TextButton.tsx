@@ -1,20 +1,13 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
 
-interface ButtonProps {
-  text: string
-  onClick: VoidFunction
+export interface TextButtonProps {
+  text?: string
+  onClick?: VoidFunction
 }
 
-const Button: FC<ButtonProps> = ({ text, onClick }) => (
-  <StyledButton
-    onClick={(e) => {
-      e.preventDefault()
-      onClick()
-    }}
-  >
-    {text}
-  </StyledButton>
+export const TextButton: FC<TextButtonProps> = ({ text, onClick }) => (
+  <StyledButton onClick={onClick}>{text}</StyledButton>
 )
 
 const StyledButton = styled.button`
@@ -29,5 +22,3 @@ const StyledButton = styled.button`
     border-color: #ede1e6;
   }
 `
-
-export { Button }

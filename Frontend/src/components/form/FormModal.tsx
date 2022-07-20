@@ -1,15 +1,19 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactElement } from 'react'
 import styled from 'styled-components'
 import { Button } from '../Button'
+import { FormInputProps } from './FormInput'
+import { FormSelectProps } from './FormSelect'
+
+type FormChild = ReactElement<FormInputProps | FormSelectProps>
 
 interface ModalFormProps {
   onSubmit: VoidFunction
   onClose: VoidFunction
   title?: string
-  children?: ReactNode | ReactNode[]
+  children?: FormChild | FormChild[]
 }
 
-const FormModal: FC<ModalFormProps> = ({
+export const FormModal: FC<ModalFormProps> = ({
   onSubmit,
   onClose,
   title = 'Form title',
@@ -77,5 +81,3 @@ const FormTitle = styled.h2`
   margin-bottom: 1.5em;
   font-family: cursive;
 `
-
-export { FormModal }

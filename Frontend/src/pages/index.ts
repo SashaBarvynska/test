@@ -1,5 +1,5 @@
-export { Members } from './members/Members'
-export { MemberProfile } from './members/MemberProfile'
+export { Users } from './users/Users'
+export { UserProfile } from './users/UserProfile'
 export { Pets } from './pets/Pets'
 export { PetProfile } from './pets/PetProfile'
 export { NotFound } from './NotFound'

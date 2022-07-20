@@ -1,70 +1,85 @@
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
-import { FiEdit as EditIcon } from 'react-icons/fi'
-import { MdDeleteOutline as DeleteIcon } from 'react-icons/md'
+import { RecordValue } from '../types/common'
+
+type Shape = 'square' | 'round'
+type Color = 'initial' | 'aliceblue' | 'secondary'
 
 interface InfoCardProps<T> {
-  fields: T
-  rows: Row<T>[]
-  title: string
-  children?: ReactElement[]
+  data: T
+  fields: CardField<T>[]
+  className?: string
+  title?: string
+  button1?: ReactElement
+  button2?: ReactElement
+  shape?: Shape
 }
 
-export interface Row<T> {
-  title: string
+export interface CardField<T> {
+  name: string
   field: keyof T
 }
 
-const InfoCard = <T extends Record<string, any>>({
+export const InfoCard = <T extends Record<keyof T, RecordValue>>({
+  data,
   fields,
-  rows,
+  className,
   title,
-  children
-}: InfoCardProps<T>) => {
-  return (
-    <Container>
-      <h2>{title}</h2>
-      <RowsGroup>
-        {rows.map((row, index) => (
-          <Row key={index}>
-            <RowHeader>{row.title}:</RowHeader>
-            <span>{fields[row.field]}</span>
-          </Row>
-        ))}
-      </RowsGroup>
-      {children && <ActionContainer>{children}</ActionContainer>}
-    </Container>
-  )
-}
+  button1,
+  button2,
+  shape = 'square'
+}: InfoCardProps<T>) => (
+  <Card className={className} shape={shape}>
+    {title && <CardTitle>{title}</CardTitle>}
+    <CardFields>
+      {fields.map(({ name, field }, index) => (
+        <Field key={index}>
+          <FieldName>{name}:</FieldName>
+          <span>{data[field]}</span>
+        </Field>
+      ))}
+    </CardFields>
+    {(button1 || button2) && (
+      <CardButtons>
+        {button1}
+        {button2}
+      </CardButtons>
+    )}
+  </Card>
+)
 
-const Container = styled.div`
-  width: 40%;
+const Card = styled.div<{ shape: Shape }>`
+  width: 20em;
   padding: 1.5em 2.5em 1.5em 2.5em;
-  background: var(--secondary);
   font-family: cursive;
-  border: 0.4em solid var(--primary);
+  border: 0.1em solid var(--primary);
+  border-radius: ${({ shape }) => (shape === 'round' ? '1em' : '0')};
+  background: aliceblue;
 `
 
-const RowsGroup = styled.div`
-  margin-top: 3em;
+const CardTitle = styled.h2`
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
+`
+
+const CardFields = styled.div`
+  margin-top: 2em;
   margin-bottom: 3em;
 `
 
-const Row = styled.div`
+const Field = styled.div`
   display: flex;
   margin-top: 1em;
   margin-bottom: 1em;
   border-bottom: groove;
 `
 
-const RowHeader = styled.span`
+const FieldName = styled.span`
   width: 45%;
   font-weight: bold;
 `
 
-const ActionContainer = styled.div`
+const CardButtons = styled.div`
   display: flex;
   justify-content: space-between;
 `
-
-export { InfoCard }

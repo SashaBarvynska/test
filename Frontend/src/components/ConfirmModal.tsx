@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC } from 'react'
 import styled from 'styled-components'
 import { Button } from './Button'
 
@@ -8,7 +8,7 @@ interface ModalFormProps {
   message: string
 }
 
-const ConfirmModal: FC<ModalFormProps> = ({ onConfirm, onClose, message }) => {
+export const ConfirmModal: FC<ModalFormProps> = ({ onConfirm, onClose, message }) => {
   return (
     <Container>
       <ModalBackground />
@@ -70,5 +70,3 @@ const ModalMessage = styled.h3`
   margin-bottom: 1.5em;
   font-family: cursive;
 `
-
-export { ConfirmModal }

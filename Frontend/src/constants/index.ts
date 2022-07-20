@@ -1,5 +1,5 @@
-import { Option } from "../components/form/FormSelect"
-import { CountryEnum, PetGenderEnum } from "./enums"
+import { Option } from "../components/Form/FormSelect"
+import { CountryEnum, CurrencyEnum, PetGenderEnum } from "./enums"
 
 export const BE_BASE_URL = 'http://127.0.0.1:8000'
 
@@ -15,3 +15,12 @@ export const COUNTRY_OPTIONS: Option[] = [
   { value: CountryEnum.UK, title: 'United Kingdom' },
   { value: CountryEnum.China, title: 'China' }
 ]
+
+export const CURRENCY_OPTIONS: Option[] = [
+  { value: CurrencyEnum.dollar, title: 'USD' },
+  { value: CurrencyEnum.euro, title: 'EU' },
+  { value: CurrencyEnum.hryvnia, title: 'UAH' },
+  { value: CurrencyEnum.pound, title: 'GBD' },
+  { value: CurrencyEnum.yuan, title: 'CNY' }
+]
+

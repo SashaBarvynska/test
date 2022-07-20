@@ -1,28 +1,27 @@
 import React, { FC, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
-import { adoptPet, getPets } from '../../api/pets'
+import { adoptPet, getPets } from '../../api/pet'
 import { Column, Table } from '../../components/Table'
 import { Pet } from '../../types/pet'
 import styled from 'styled-components'
-import { Button } from '../../components/Button'
 import { AddPetForm } from '../../modules/pets/AddPetForm'
 import { Link, useParams } from 'react-router-dom'
 import { MdAccountBox as ProfileIcon } from 'react-icons/md'
 import { AiOutlinePlusSquare as PlusIcon } from 'react-icons/ai'
 import { AxiosError } from 'axios'
-import { ConfirmModal, useToast } from '../../components'
+import { Button, ConfirmModal, useToast } from '../../components'
 
 interface PetsProps {
   isAdopt?: boolean
 }
 
-const Pets: FC<PetsProps> = ({ isAdopt }) => {
+export const Pets: FC<PetsProps> = ({ isAdopt }) => {
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false)
   const [adoptPetId, setAdoptPetId] = useState<number>(NaN)
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
 
   const { addToast } = useToast()
-  const { memberId } = useParams()
+  const { userId } = useParams()
 
   const { data: pets = [] } = useQuery(
     'pets',
@@ -42,7 +41,7 @@ const Pets: FC<PetsProps> = ({ isAdopt }) => {
     }
   )
 
-  const { mutate } = useMutation(() => adoptPet(adoptPetId, Number(memberId)), {
+  const { mutate } = useMutation(() => adoptPet(adoptPetId, Number(userId)), {
     onSuccess: () => {
       setIsOpenConfirmModal(false)
       addToast({ message: 'Pet successfully adopted!', type: 'success' })
@@ -103,7 +102,7 @@ const Pets: FC<PetsProps> = ({ isAdopt }) => {
       <HeaderContainer>
         <StyledHeader>Pets:</StyledHeader>
         {isAdopt ? (
-          <ReturnLink to={`/members/${memberId}`}>Return to profile</ReturnLink>
+          <ReturnLink to={`/users/${userId}`}>Return to profile</ReturnLink>
         ) : (
           <Button text="Add pet" onClick={() => setIsOpenAddModal(true)} />
         )}
@@ -164,5 +163,3 @@ const ReturnLink = styled(Link)`
     text-decoration: underline;
   }
 `
-
-export { Pets }
