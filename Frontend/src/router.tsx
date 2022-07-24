@@ -1,8 +1,9 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { Users, UserProfile, Pets, PetProfile, NotFound } from './pages'
-import { Navbar } from './components'
 import styled from 'styled-components'
+
+import { Users, UserProfile, Pets, PetProfile, NotFound, AdoptPets } from './pages'
+import { Navbar } from './components'
 
 const Router = () => (
   <BrowserRouter>
@@ -14,7 +15,7 @@ const Router = () => (
         <Route path="users/:userId" element={<UserProfile />} />
         <Route path="pets" element={<Pets />} />
         <Route path="pets/:petId" element={<PetProfile />} />
-        <Route path="users/:userId/adopt-pet" element={<Pets isAdopt />} />
+        <Route path="users/:userId/adopt-pet" element={<AdoptPets />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Content>

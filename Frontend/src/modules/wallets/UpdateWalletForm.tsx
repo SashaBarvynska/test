@@ -1,11 +1,12 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { updateWallet } from '../../api/wallet'
+import { AxiosError } from 'axios'
+
 import { FormModal, FormInput, useToast, FormSelect } from '../../components'
+import { UpdateWallet, Wallet } from '../../types'
+import { updateWallet } from '../../api'
 import { CURRENCY_OPTIONS } from '../../constants'
-import { isValidationError } from '../../helpers/isValidationError'
-import { UpdateWallet, Wallet } from '../../types/wallet'
+import { isValidationError } from '../../helpers'
 
 interface UpdateWalletFormProps {
   wallet: UpdateWallet

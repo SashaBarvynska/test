@@ -1,15 +1,16 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { createPet } from '../../api/pet'
+import { AxiosError } from 'axios'
+
 import { FormModal, FormInput, FormSelect, useToast } from '../../components'
+import { CreatePet } from '../../types'
+import { createPet } from '../../api'
 import { COUNTRY_OPTIONS, GENDER_OPTIONS } from '../../constants'
-import { isValidationError } from '../../helpers/isValidationError'
-import { CreatePet, Pet } from '../../types/pet'
+import { isValidationError } from '../../helpers'
 
 interface AddPetFormProps {
   onClose: VoidFunction
-  addPetToList: (pet: Pet) => void
+  refetchPets: VoidFunction
 }
 
 const defaultPet: CreatePet = {
@@ -19,7 +20,7 @@ const defaultPet: CreatePet = {
   country: ''
 }
 
-export const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
+export const AddPetForm: FC<AddPetFormProps> = ({ onClose, refetchPets }) => {
   const [newPet, setNewPet] = useState<CreatePet>(defaultPet)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -31,8 +32,8 @@ export const AddPetForm: FC<AddPetFormProps> = ({ onClose, addPetToList }) => {
   }
 
   const { mutate } = useMutation(() => createPet(newPet), {
-    onSuccess: ({ data }) => {
-      addPetToList(data.pet)
+    onSuccess: () => {
+      refetchPets()
       onClose()
       addToast({ message: 'Pet successfully created!', type: 'success' })
     },

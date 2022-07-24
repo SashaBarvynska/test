@@ -1,4 +1,4 @@
-import { CountryEnum } from "../constants/enums"
+import { CountryEnum } from "../constants"
 
 export interface Address {
     id: number

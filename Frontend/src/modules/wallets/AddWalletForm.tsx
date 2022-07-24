@@ -1,11 +1,12 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { createWallet } from '../../api/wallet'
+import { AxiosError } from 'axios'
+
 import { FormModal, FormInput, useToast, FormSelect } from '../../components'
+import { CreateWallet, Wallet } from '../../types'
+import { createWallet } from '../../api'
 import { CURRENCY_OPTIONS } from '../../constants'
-import { isValidationError } from '../../helpers/isValidationError'
-import { CreateWallet, Wallet } from '../../types/wallet'
+import { isValidationError } from '../../helpers'
 
 interface AddWalletFormProps {
   onClose: VoidFunction

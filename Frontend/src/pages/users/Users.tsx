@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from 'react'
 import { useQuery } from 'react-query'
-import { AxiosError } from 'axios'
 import styled from 'styled-components'
-import { getUsers } from '../../api/user'
+import { AxiosError } from 'axios'
+
+import { Button, Table, Column, useToast } from '../../components'
+import { AddUserForm } from '../../modules'
 import { User } from '../../types'
-import { Button, Table, useToast } from '../../components'
-import { AddUserForm } from '../../modules/users/AddUserForm'
-import { Column } from '../../components/Table'
+import { getUsers } from '../../api'
 
 const columns: Column<User>[] = [
   {
@@ -24,8 +24,8 @@ const columns: Column<User>[] = [
   {
     header: 'Actions',
     field: 'id',
-    customCell: (data) => (
-      <Button icon="MdAccountBox" linkTo={String(data.id)} color="primary" />
+    customCell: ({ id }) => (
+      <Button icon="MdAccountBox" linkTo={String(id)} color="primary" />
     )
   }
 ]
@@ -35,7 +35,7 @@ export const Users = () => {
 
   const { addToast } = useToast()
 
-  const { data: users = [] } = useQuery(
+  const { data: users = [], refetch } = useQuery(
     'users',
     async () => {
       const { data } = await getUsers()
@@ -52,10 +52,6 @@ export const Users = () => {
     }
   )
 
-  const addUserToList = (user: User) => {
-    users.push(user)
-  }
-
   return (
     <Fragment>
       <HeaderContainer>
@@ -63,9 +59,7 @@ export const Users = () => {
         <Button text="Add user" onClick={() => setIsOpen(true)} />
       </HeaderContainer>
       <Table<User> records={users} columns={columns} />
-      {isOpen && (
-        <AddUserForm onClose={() => setIsOpen(false)} addUserToList={addUserToList} />
-      )}
+      {isOpen && <AddUserForm onClose={() => setIsOpen(false)} refetchUsers={refetch} />}
     </Fragment>
   )
 }

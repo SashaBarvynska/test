@@ -1,11 +1,12 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { updateAddress } from '../../api/address'
+import { AxiosError } from 'axios'
+
 import { FormModal, FormInput, useToast, FormSelect } from '../../components'
+import { Address, UpdateAddress } from '../../types'
+import { updateAddress } from '../../api'
 import { COUNTRY_OPTIONS } from '../../constants'
-import { isValidationError } from '../../helpers/isValidationError'
-import { Address, UpdateAddress } from '../../types/address'
+import { isValidationError } from '../../helpers'
 
 interface UpdateAddressFormProps {
   address: UpdateAddress

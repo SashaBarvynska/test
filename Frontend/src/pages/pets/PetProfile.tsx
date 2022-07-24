@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
-import { Link, useParams } from 'react-router-dom'
-import styled from 'styled-components'
-import { FiEdit as EditIcon } from 'react-icons/fi'
-import { MdDeleteOutline as DeleteIcon } from 'react-icons/md'
-import { ConfirmModal, InfoCard, Tooltip, useToast } from '../../components'
-import { CardField } from '../../components/InfoCard'
-import { Pet } from '../../types/pet'
-import { deletePet, getPetProfile } from '../../api/pet'
-import { UpdatePetForm } from '../../modules/pets/UpdatePetForm'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AxiosError } from 'axios'
+
+import { Button, ConfirmModal, InfoCard, CardField, useToast } from '../../components'
+import { UpdatePetForm } from '../../modules'
+import { Pet } from '../../types'
+import { deletePet, getPetProfile } from '../../api'
 
 const fields: CardField<Pet>[] = [
   {
@@ -34,10 +31,9 @@ export const PetProfile = () => {
   const [pet, setPet] = useState<Pet>({} as Pet)
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState<boolean>(false)
   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
-  const [isPetDeleted, setIsPetDeleted] = useState<boolean>(false)
 
-  const { petId } = useParams<string>()
-
+  const navigate = useNavigate()
+  const { petId } = useParams()
   const { addToast } = useToast()
 
   useQuery(
@@ -47,7 +43,6 @@ export const PetProfile = () => {
       return data.pet
     },
     {
-      refetchOnMount: false,
       refetchOnWindowFocus: false,
       onSuccess(data) {
         setPet(data)
@@ -57,8 +52,8 @@ export const PetProfile = () => {
 
   const { mutate } = useMutation(() => deletePet(pet.id), {
     onSuccess: () => {
+      navigate('/pets', { replace: true })
       setIsOpenConfirmModal(false)
-      setIsPetDeleted(true)
       addToast({ message: 'Pet successfully deleted!', type: 'success' })
     },
     onError: (e: AxiosError) => {
@@ -71,31 +66,26 @@ export const PetProfile = () => {
 
   return (
     <>
-      {isPetDeleted ? (
-        <DeletedProfile>
-          <h2>Pet is not exist anymore!</h2>
-          <Link to="/pets">Return to pets</Link>
-        </DeletedProfile>
-      ) : (
-        <InfoCard
-          title="Pet profile"
-          data={pet}
-          fields={fields}
-          button1={
-            <Tooltip text="Edit pet">
-              <StyledEditIcon size={'1.4em'} onClick={() => setIsOpenUpdateModal(true)} />
-            </Tooltip>
-          }
-          button2={
-            <Tooltip text="Delete pet">
-              <StyledDeleteIcon
-                size={'1.7em'}
-                onClick={() => setIsOpenConfirmModal(true)}
-              />
-            </Tooltip>
-          }
-        />
-      )}
+      <InfoCard
+        title="Pet profile"
+        data={pet}
+        fields={fields}
+        button1={
+          <Button
+            icon="FiEdit"
+            size="1.4em"
+            tooltipText="Edit pet"
+            onClick={() => setIsOpenUpdateModal(true)}
+          />
+        }
+        button2={
+          <Button
+            icon="MdDeleteOutline"
+            tooltipText="Delete pet"
+            onClick={() => setIsOpenConfirmModal(true)}
+          />
+        }
+      />
 
       {isOpenUpdateModal && (
         <UpdatePetForm
@@ -114,20 +104,3 @@ export const PetProfile = () => {
     </>
   )
 }
-
-const StyledEditIcon = styled(EditIcon)`
-  cursor: pointer;
-`
-
-const StyledDeleteIcon = styled(DeleteIcon)`
-  cursor: pointer;
-`
-
-const DeletedProfile = styled.div`
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  font-family: cursive;
-  align-items: center;
-  font-size: 1.5em;
-`

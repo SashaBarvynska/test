@@ -1,4 +1,4 @@
-import { CurrencyEnum } from "../constants/enums"
+import { CurrencyEnum } from "../constants"
 
 export interface Wallet {
     id: number

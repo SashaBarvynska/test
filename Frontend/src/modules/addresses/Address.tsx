@@ -1,19 +1,13 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState } from 'react'
 import { useMutation } from 'react-query'
 import styled from 'styled-components'
-import { deleteAddress } from '../../api/address'
-import { Button, ConfirmModal, InfoCard, useToast } from '../../components'
-import { CardField } from '../../components/InfoCard'
+import { AxiosError } from 'axios'
+
+import { Button, ConfirmModal, InfoCard, CardField, useToast } from '../../components'
+import { deleteAddress } from '../../api'
 import { Address as AddressType } from '../../types'
 import { AddAddressForm } from './AddAddressForm'
 import { UpdateAddressForm } from './UpdateAddressForm'
-
-interface AddressProps {
-  address: AddressType | null
-  setAddress: (address: AddressType | null) => void
-  userId: number
-}
 
 const addressFields: CardField<AddressType>[] = [
   {
@@ -29,6 +23,12 @@ const addressFields: CardField<AddressType>[] = [
     field: 'phone_number'
   }
 ]
+
+interface AddressProps {
+  address: AddressType | null
+  setAddress: (address: AddressType | null) => void
+  userId: number
+}
 
 interface AddressModals {
   create: boolean

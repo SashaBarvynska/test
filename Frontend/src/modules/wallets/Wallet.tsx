@@ -1,11 +1,11 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState } from 'react'
 import { useMutation } from 'react-query'
 import styled from 'styled-components'
-import { deleteWallet } from '../../api/wallet'
-import { Button, ConfirmModal, InfoCard, useToast } from '../../components'
-import { CardField } from '../../components/InfoCard'
+import { AxiosError } from 'axios'
+
+import { Button, ConfirmModal, InfoCard, CardField, useToast } from '../../components'
 import { Wallet as WalletType } from '../../types'
+import { deleteWallet } from '../../api'
 import { AddWalletForm } from './AddWalletForm'
 import { UpdateWalletForm } from './UpdateWalletForm'
 

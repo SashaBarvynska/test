@@ -1,30 +1,23 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { getUserProfile } from '../../api/user'
-import { User } from '../../types/user'
+import { AxiosError } from 'axios'
+
 import {
   ConfirmModal,
   Button,
-  InfoCard,
   Table,
+  Column,
   useToast,
   TabsGroup,
   Tab
-} from '../../components'
-import { CardField } from '../../components/InfoCard'
-import { AxiosError } from 'axios'
-import { Column } from '../../components/Table'
-import { Pet } from '../../types/pet'
-import DogPlus from '../../assets/dog-plus.png'
-import DogDollar from '../../assets/dog-dollar.png'
-import { removePet } from '../../api/pet'
-import { Address as AddressType } from '../../types/address'
-import { Wallet as WalletType } from '../../types/wallet'
-import { UserDetails } from '../../modules/users/UserDetails'
-import { Address } from '../../modules/addresses/Address'
-import { Wallet } from '../../modules/wallets/Wallet'
+} from '../../../components'
+import { UserDetails, Address, Wallet } from '../../../modules'
+import { User, Pet, Address as AddressType, Wallet as WalletType } from '../../../types'
+import { getUserProfile, removePet } from '../../../api'
+import DogPlus from '../../../assets/dog-plus.png'
+import DogDollar from '../../../assets/dog-dollar.png'
 
 export const UserProfile = () => {
   const [user, setUser] = useState<User>({} as User)
@@ -34,8 +27,7 @@ export const UserProfile = () => {
   const [removePetId, setRemovePetId] = useState<number>(NaN)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
-  const { userId } = useParams<string>()
-
+  const { userId } = useParams()
   const { addToast } = useToast()
 
   useQuery('user', () => getUserProfile(Number(userId)), {
@@ -50,6 +42,7 @@ export const UserProfile = () => {
 
   const { mutate: removePetMutation } = useMutation(() => removePet(removePetId), {
     onSuccess: () => {
+      setPets((prevState) => prevState.filter(({ id }) => id !== removePetId))
       setIsOpenModal(false)
       addToast({ message: 'Pet successfully removed!', type: 'success' })
     },
@@ -61,52 +54,47 @@ export const UserProfile = () => {
     }
   })
 
-  const removePetConfirm = () => {
-    removePetMutation()
-    const petsList = [...pets]
-    const index = petsList.findIndex((pet) => pet.id === removePetId)
-    petsList.splice(index, 1)
-    setPets(petsList)
-  }
+  const columns = useMemo<Column<Pet>[]>(
+    () => [
+      {
+        header: 'Name',
+        field: 'name'
+      },
+      {
+        header: 'Type',
+        field: 'type'
+      },
+      {
+        header: 'Gender',
+        field: 'gender'
+      },
+      {
+        header: 'Actions',
+        field: 'id',
+        customCell: ({ id }) => (
+          <>
+            <Button
+              icon="MdAccountBox"
+              linkTo={String(id)}
+              tooltipText="Pet profile"
+              color="primary"
+            />
 
-  const columns: Column<Pet>[] = [
-    {
-      header: 'Name',
-      field: 'name'
-    },
-    {
-      header: 'Type',
-      field: 'type'
-    },
-    {
-      header: 'Gender',
-      field: 'gender'
-    },
-    {
-      header: 'Actions',
-      field: 'id',
-      customCell: (data) => (
-        <>
-          <Button
-            icon="MdAccountBox"
-            linkTo={String(data.id)}
-            tooltipText="Pet profile"
-            color="primary"
-          />
-
-          <Button
-            icon="AiOutlineMinusSquare"
-            tooltipText="Remove user pet"
-            color="primary"
-            onClick={() => {
-              setRemovePetId(data.id)
-              setIsOpenModal(true)
-            }}
-          />
-        </>
-      )
-    }
-  ]
+            <Button
+              icon="AiOutlineMinusSquare"
+              tooltipText="Remove user pet"
+              color="primary"
+              onClick={() => {
+                setRemovePetId(id)
+                setIsOpenModal(true)
+              }}
+            />
+          </>
+        )
+      }
+    ],
+    [setRemovePetId, setIsOpenModal]
+  )
 
   return (
     <>
@@ -153,7 +141,7 @@ export const UserProfile = () => {
       {isOpenModal && (
         <ConfirmModal
           message="Are you sure you want to remove this pet?"
-          onConfirm={removePetConfirm}
+          onConfirm={removePetMutation}
           onClose={() => setIsOpenModal(false)}
         />
       )}

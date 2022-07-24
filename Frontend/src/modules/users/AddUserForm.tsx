@@ -1,15 +1,15 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { createUser } from '../../api/user'
-import { FormModal, FormInput, useToast, FormSelect } from '../../components'
-import { COUNTRY_OPTIONS, CURRENCY_OPTIONS } from '../../constants'
-import { isValidationError } from '../../helpers/isValidationError'
-import { CreateUser, User } from '../../types/user'
+import { AxiosError } from 'axios'
+
+import { FormModal, FormInput, useToast } from '../../components'
+import { CreateUser } from '../../types'
+import { createUser } from '../../api'
+import { isValidationError } from '../../helpers'
 
 interface AddUserFormProps {
   onClose: VoidFunction
-  addUserToList: (user: User) => void
+  refetchUsers: VoidFunction
 }
 
 const defaultUser: CreateUser = {
@@ -18,7 +18,7 @@ const defaultUser: CreateUser = {
   age: ''
 }
 
-export const AddUserForm: FC<AddUserFormProps> = ({ onClose, addUserToList }) => {
+export const AddUserForm: FC<AddUserFormProps> = ({ onClose, refetchUsers }) => {
   const [newUser, setNewUser] = useState<CreateUser>(defaultUser)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -30,8 +30,8 @@ export const AddUserForm: FC<AddUserFormProps> = ({ onClose, addUserToList }) =>
   }
 
   const { mutate } = useMutation(() => createUser(newUser), {
-    onSuccess: ({ data }) => {
-      addUserToList(data.created_user)
+    onSuccess: () => {
+      refetchUsers()
       onClose()
       addToast({ message: 'User successfully created!', type: 'success' })
     },

@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
-import { RecordValue } from '../types/common'
+
+import { RecordValue } from '../types'
 
 interface TableProps<T> {
   records: T[]

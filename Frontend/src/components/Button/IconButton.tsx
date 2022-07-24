@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import * as AiIcons from 'react-icons/ai'
 import * as FiIcons from 'react-icons/fi'
 import * as MdIcons from 'react-icons/md'
 import * as GoIcons from 'react-icons/go'
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 
 const Icons = { ...AiIcons, ...FiIcons, ...MdIcons, ...GoIcons }
 

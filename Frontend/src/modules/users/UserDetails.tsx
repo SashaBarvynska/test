@@ -1,12 +1,27 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState } from 'react'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
-import { deleteUser } from '../../api/user'
-import { Button, ConfirmModal, InfoCard, useToast } from '../../components'
-import { CardField } from '../../components/InfoCard'
-import { User } from '../../types/user'
+import { AxiosError } from 'axios'
+
+import { Button, ConfirmModal, InfoCard, CardField, useToast } from '../../components'
+import { User } from '../../types'
+import { deleteUser } from '../../api'
 import { UpdateUserForm } from './UpdateUserForm'
+
+const fields: CardField<User>[] = [
+  {
+    name: 'First Name',
+    field: 'first_name'
+  },
+  {
+    name: 'Last Name',
+    field: 'last_name'
+  },
+  {
+    name: 'Age',
+    field: 'age'
+  }
+]
 
 interface UserDetailsProps {
   user: User
@@ -33,21 +48,6 @@ export const UserDetails: FC<UserDetailsProps> = ({ user, setUser }) => {
       })
     }
   })
-
-  const fields: CardField<User>[] = [
-    {
-      name: 'First Name',
-      field: 'first_name'
-    },
-    {
-      name: 'Last Name',
-      field: 'last_name'
-    },
-    {
-      name: 'Age',
-      field: 'age'
-    }
-  ]
 
   return (
     <>

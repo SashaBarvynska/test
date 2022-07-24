@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
-import { RecordValue } from '../types/common'
+
+import { RecordValue } from '../types'
 
 type Shape = 'square' | 'round'
-type Color = 'initial' | 'aliceblue' | 'secondary'
 
 interface InfoCardProps<T> {
   data: T

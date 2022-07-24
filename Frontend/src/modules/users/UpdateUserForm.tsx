@@ -1,10 +1,11 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { updateUser } from '../../api/user'
+import { AxiosError } from 'axios'
+
 import { FormModal, FormInput, useToast } from '../../components'
-import { isValidationError } from '../../helpers/isValidationError'
-import { User, UpdateUser } from '../../types/user'
+import { User, UpdateUser } from '../../types'
+import { updateUser } from '../../api'
+import { isValidationError } from '../../helpers'
 
 interface UpdateUserFormProps {
   user: UpdateUser

@@ -1,11 +1,12 @@
-import { AxiosError } from 'axios'
 import React, { FC, useState, ChangeEvent } from 'react'
 import { useMutation } from 'react-query'
-import { updatePet } from '../../api/pet'
+import { AxiosError } from 'axios'
+
 import { FormModal, FormInput, useToast, FormSelect } from '../../components'
+import { Pet, UpdatePet } from '../../types'
+import { updatePet } from '../../api'
 import { COUNTRY_OPTIONS, GENDER_OPTIONS } from '../../constants'
-import { isValidationError } from '../../helpers/isValidationError'
-import { Pet, UpdatePet } from '../../types/pet'
+import { isValidationError } from '../../helpers'
 
 interface UpdatePetFormProps {
   pet: UpdatePet
