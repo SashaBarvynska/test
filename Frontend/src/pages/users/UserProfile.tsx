@@ -40,7 +40,6 @@ export const UserProfile = () => {
 
   useQuery('user', () => getUserProfile(Number(userId)), {
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     onSuccess({ data }) {
       setUser(data.user)
       setPets(data.pets)

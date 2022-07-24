@@ -38,7 +38,15 @@ export const IconButton: FC<IconButtonProps> = ({
           <StyledIcon size={size} />
         </Link>
       ) : (
-        <StyledIcon size={size} onClick={onClick} />
+        <StyledIcon
+          size={size}
+          onClick={(event) => {
+            if (onClick) {
+              event.preventDefault()
+              onClick()
+            }
+          }}
+        />
       )}
     </>
   )

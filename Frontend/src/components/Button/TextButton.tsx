@@ -7,7 +7,16 @@ export interface TextButtonProps {
 }
 
 export const TextButton: FC<TextButtonProps> = ({ text, onClick }) => (
-  <StyledButton onClick={onClick}>{text}</StyledButton>
+  <StyledButton
+    onClick={(event) => {
+      if (onClick) {
+        event.preventDefault()
+        onClick()
+      }
+    }}
+  >
+    {text}
+  </StyledButton>
 )
 
 const StyledButton = styled.button`

@@ -166,7 +166,7 @@ def handle_all_users(request: HttpRequest):
         # отправляем ответ
         return JsonResponse(
             {
-                "created_member": {
+                "created_user": {
                     "id": user.pk,
                     "first_name": user.first_name,
                     "last_name": user.last_name,

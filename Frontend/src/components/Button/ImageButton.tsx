@@ -21,7 +21,15 @@ export const ImageButton: FC<ImageButtonProps> = ({
         <Image src={src} height={height} />
       </Link>
     ) : (
-      <Image src={src} onClick={onClick} />
+      <Image
+        src={src}
+        onClick={(event) => {
+          if (onClick) {
+            event.preventDefault()
+            onClick()
+          }
+        }}
+      />
     )}
   </>
 )
