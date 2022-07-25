@@ -80,9 +80,9 @@ const StyledDataCell = styled.td`
 `
 
 const StyledCustomDataCell = styled.td`
-  display: flex;
+  display: table-cell;
+  vertical-align: bottom;
   padding-left: 2.1em;
-  align-items: center;
   height: inherit;
 `
 

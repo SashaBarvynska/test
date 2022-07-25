@@ -17,7 +17,8 @@ interface AddAddressFormProps {
 const defaultAddress: CreateAddress = {
   country: '',
   city: '',
-  phone_number: ''
+  phone_number: '',
+  user_id: NaN
 }
 
 export const AddAddressForm: FC<AddAddressFormProps> = ({
@@ -25,7 +26,10 @@ export const AddAddressForm: FC<AddAddressFormProps> = ({
   setAddress,
   userId
 }) => {
-  const [newAddress, setNewAddress] = useState<CreateAddress>(defaultAddress)
+  const [newAddress, setNewAddress] = useState<CreateAddress>({
+    ...defaultAddress,
+    user_id: userId
+  })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { addToast } = useToast()
@@ -35,7 +39,7 @@ export const AddAddressForm: FC<AddAddressFormProps> = ({
     setNewAddress((user) => ({ ...user, [name]: value }))
   }
 
-  const { mutate } = useMutation(() => createAddress(userId, newAddress), {
+  const { mutate } = useMutation(() => createAddress(newAddress), {
     onSuccess: ({ data }) => {
       setAddress(data.created_address)
       onClose()

@@ -51,6 +51,7 @@ export const UpdateAddressForm: FC<UpdateAddressFormProps> = ({
     <FormModal title="Update address" onClose={onClose} onSubmit={mutate}>
       <FormSelect
         options={COUNTRY_OPTIONS}
+        defaultValue={addressData.country}
         title="Country"
         name="country"
         onChange={handleChange}

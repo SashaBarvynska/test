@@ -14,7 +14,7 @@ export interface CreatePet extends Omit<Pet, 'id' | 'user_id' | 'gender' | 'coun
     country: string
 }
 
-export interface UpdatePet extends Omit<Pet, 'gender' | 'country'> {
+export interface UpdatePet extends Omit<Pet, 'gender' | 'country' | 'user_id'> {
     gender: string
     country: string
 }

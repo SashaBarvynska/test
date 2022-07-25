@@ -15,6 +15,7 @@ export const Tooltip: FC<TooltipProps> = ({ text = 'Tooltip text...', children }
 
 const Wrapper = styled.div`
   position: relative;
+  display: inline-block;
   div.tooltip {
     display: none;
   }

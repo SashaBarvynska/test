@@ -51,6 +51,7 @@ export const UpdateWalletForm: FC<UpdateWalletFormProps> = ({
     <FormModal title="Update wallet" onClose={onClose} onSubmit={mutate}>
       <FormSelect
         options={CURRENCY_OPTIONS}
+        defaultValue={walletData.currency}
         title="Currency"
         name="currency"
         onChange={handleChange}

@@ -16,11 +16,15 @@ interface AddWalletFormProps {
 
 const defaultWallet: CreateWallet = {
   currency: '',
-  amount: ''
+  amount: '',
+  user_id: NaN
 }
 
 export const AddWalletForm: FC<AddWalletFormProps> = ({ onClose, setWallet, userId }) => {
-  const [newWallet, setNewWallet] = useState<CreateWallet>(defaultWallet)
+  const [newWallet, setNewWallet] = useState<CreateWallet>({
+    ...defaultWallet,
+    user_id: userId
+  })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { addToast } = useToast()
@@ -30,7 +34,7 @@ export const AddWalletForm: FC<AddWalletFormProps> = ({ onClose, setWallet, user
     setNewWallet((wallet) => ({ ...wallet, [name]: value }))
   }
 
-  const { mutate } = useMutation(() => createWallet(userId, newWallet), {
+  const { mutate } = useMutation(() => createWallet(newWallet), {
     onSuccess: ({ data }) => {
       setWallet(data.created_wallet)
       onClose()

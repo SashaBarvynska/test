@@ -2,9 +2,8 @@ import axios, { AxiosPromise } from 'axios'
 import { BE_BASE_URL as URL } from '../constants'
 import { Address, CreateAddress, UpdateAddress } from '../types/address'
 
-export const createAddress = (userId: number, address: CreateAddress): AxiosPromise<{ created_address: Address }> => {
-    const data = {...address, user_id: userId }
-    return axios.post(`${URL}/addresses`, data)
+export const createAddress = (address: CreateAddress): AxiosPromise<{ created_address: Address }> => {
+    return axios.post(`${URL}/addresses`, address)
 }
 
 export const updateAddress = (address: UpdateAddress): AxiosPromise<{ updated_address: Address }> => {

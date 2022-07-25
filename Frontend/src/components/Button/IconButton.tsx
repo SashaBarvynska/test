@@ -27,7 +27,6 @@ export const IconButton: FC<IconButtonProps> = ({
 
   const StyledIcon = styled(Icon)`
     cursor: pointer;
-    vertical-align: -webkit-baseline-middle;
     color: ${color ? `var(--${color})` : 'black'};
   `
 
