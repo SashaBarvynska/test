@@ -75,7 +75,7 @@ export const UserProfile = () => {
           <>
             <Button
               icon="MdAccountBox"
-              linkTo={String(id)}
+              linkTo={'/pets/' + String(id)}
               tooltipText="Pet profile"
               color="primary"
             />
