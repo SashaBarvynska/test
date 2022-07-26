@@ -1,7 +1,0 @@
-#Front
-node_modules
-.env
-
-#Back
-__pycache__
-*.py[cod]
