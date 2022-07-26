@@ -40,11 +40,13 @@ const config: Configuration = {
     filename: "bundle.js",
   },
   devServer: {
-    static: path.join(__dirname, "build"),
+    static: [
+      path.join(__dirname, "build"), 
+      path.join(__dirname, "src")
+    ],
     compress: true,
     port: 4000,
-    historyApiFallback: true,
-    
+    historyApiFallback: true
   },
 };
 
