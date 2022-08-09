@@ -13,32 +13,29 @@ export interface IconButtonProps {
   onClick?: VoidFunction
   size?: string | number
   linkTo?: string
-  color?: 'primary'
+  color?: 'primary' | 'black'
 }
 
 export const IconButton: FC<IconButtonProps> = ({
   icon = 'MdInsertEmoticon',
   onClick,
   linkTo,
-  color,
+  color = 'black',
   size = '1.7em'
 }) => {
   const Icon = Icons[icon]
-
-  const StyledIcon = styled(Icon)`
-    cursor: pointer;
-    color: ${color ? `var(--${color})` : 'black'};
-  `
+  const style = { cursor: 'pointer', color: `var(--${color})` }
 
   return (
     <>
       {linkTo ? (
         <Link to={linkTo}>
-          <StyledIcon size={size} />
+          <Icon size={size} style={style} />
         </Link>
       ) : (
-        <StyledIcon
+        <Icon
           size={size}
+          style={style}
           onClick={(event) => {
             if (onClick) {
               event.preventDefault()

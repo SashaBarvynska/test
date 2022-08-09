@@ -48,6 +48,7 @@ const config: Configuration = {
     port: 4000,
     historyApiFallback: true
   },
+  devtool: 'source-map'
 };
 
 export default config;

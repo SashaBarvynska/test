@@ -5,9 +5,11 @@ const GlobalStyles = createGlobalStyle`
         --primary: #6E2346;
         --secondary: #EDE1E6;
         --error: #EB5146;
-        --white: #FDFDFD;
         --success: #48AD6A;
         --hover: #ED8CB5;
+
+        --white: #FDFDFD;
+        --black: #000000;
     }
 
     body {
