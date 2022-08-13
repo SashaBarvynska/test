@@ -4,9 +4,17 @@ import { useMutation, useQuery } from 'react-query'
 import styled from 'styled-components'
 import { AxiosError } from 'axios'
 
-import { ConfirmModal, useToast, Table, Column, Button } from '../../../components'
+import {
+  ConfirmModal,
+  useToast,
+  Table,
+  Column,
+  Button,
+  Tooltip
+} from '../../../components'
 import { Pet } from '../../../types'
 import { adoptPet, getPets } from '../../../api'
+import { getFlag } from '../../../helpers'
 
 export const AdoptPets: FC = () => {
   const [pets, setPets] = useState<Pet[]>([])
@@ -60,7 +68,12 @@ export const AdoptPets: FC = () => {
       },
       {
         header: 'Country',
-        field: 'country'
+        field: 'country',
+        customCell: ({ country }) => (
+          <Tooltip text={country}>
+            <img src={getFlag(country)} height="30px" />
+          </Tooltip>
+        )
       },
       {
         header: 'Actions',
@@ -81,7 +94,7 @@ export const AdoptPets: FC = () => {
         )
       }
     ],
-    [setAdoptPetId, setIsOpenConfirmModal]
+    [setAdoptPetId, setIsOpenConfirmModal, getFlag]
   )
 
   return (

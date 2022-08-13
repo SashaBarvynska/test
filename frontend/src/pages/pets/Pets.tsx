@@ -6,7 +6,7 @@ import { AxiosError } from 'axios'
 import { Button, useToast, Table, Column, Tooltip } from '../../components'
 import { AddPetForm } from '../../modules'
 import { Pet } from '../../types'
-import { getPets } from '../../api'
+import { getPets, getUsers } from '../../api'
 import { getFlag } from '../../helpers'
 
 export const Pets: FC = () => {
@@ -17,8 +17,22 @@ export const Pets: FC = () => {
   const { data: pets = [], refetch } = useQuery(
     'pets',
     async () => {
-      const { data } = await getPets()
-      return data.pets
+      const petsResponse = await getPets()
+      const usersResponse = await getUsers()
+
+      const owners = new Map(
+        usersResponse.data.users.map((user) => [
+          user.id,
+          `${user.first_name} ${user.last_name}`
+        ])
+      )
+
+      return petsResponse.data.pets.map((pet) => {
+        if (pet.user_id) {
+          return { ...pet, owner: owners.get(pet.user_id) }
+        }
+        return pet
+      })
     },
     {
       refetchOnWindowFocus: false,
@@ -31,7 +45,7 @@ export const Pets: FC = () => {
     }
   )
 
-  const columns = useMemo<Column<Pet>[]>(
+  const columns = useMemo<Column<Pet & { owner?: string }>[]>(
     () => [
       {
         header: 'Name',
@@ -53,6 +67,10 @@ export const Pets: FC = () => {
             <img src={getFlag(country)} height="30px" />
           </Tooltip>
         )
+      },
+      {
+        header: 'Owner',
+        field: 'owner'
       },
       {
         header: 'Actions',
